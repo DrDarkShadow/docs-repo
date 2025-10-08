@@ -1,32 +1,48 @@
 ## FunctionDef fibonacci(n)
-**FGDAssetsModule**: The function of FGDAssetsModule is to provide a static utility for loading and caching game assets, specifically textures, to optimize performance.
-**Attributes**: The attributes of this class.
-· _cache: A private static `Dictionary<string, Texture2D>` used to store texture assets that have already been loaded. It uses the asset's file path as the key and the `Texture2D` object as the value.
-**Code Description**: The FGDAssetsModule class serves as a centralized asset management utility. It features a static method, `GetSprite`, which is designed to retrieve `Texture2D` resources efficiently. When `GetSprite` is called with a resource path, it first checks an internal static cache, `_cache`, to determine if the texture has been previously loaded. If a cached version exists, it is returned immediately, which avoids redundant disk access and improves performance. If the texture is not found in the cache, the method proceeds to load it from the specified path using Godot's `ResourceLoader.Load<Texture2D>()`. Once the texture is successfully loaded, it is added to the `_cache` so that subsequent requests for the same asset can be served from memory. This caching strategy ensures that each unique texture is loaded from the file system only once per application session.
-**Note**: Since this is a static class, you do not need to create an instance of `FGDAssetsModule` to use its methods. The cache persists for the lifetime of the application run. If an asset on disk is changed while the application is running, the old, cached version will continue to be returned until the application is restarted.
-**Return**: The return value of this class's methods.
-· GetSprite(string path): Returns the `Texture2D` object corresponding to the given path. If the texture is already in the cache, the cached instance is returned. Otherwise, it is loaded from the file system, added to the cache, and then returned. If `ResourceLoader.Load` fails to find or load the resource at the given path, this method will return `null`.
+**ECharts1**: This is a Vue component that renders a pre-configured line chart displaying monthly transaction volume using the ECharts library.
+
+**Props**: The props of this component.
+· width: The width of the chart container. It is a string type and defaults to '100%'.
+· height: The height of the chart container. It is a string type and defaults to '280px'.
+
+**Code Description**: The component is implemented using Vue 3's Composition API. Its template consists of a single `div` element whose `ref` is set to `chartRef`. The `width` and `height` of this `div` are dynamically bound to the component's props.
+
+In the `setup` function, `chartRef` is created as a reactive reference to the `div` element. The `useECharts` composable hook is then invoked with `chartRef`, which initializes an ECharts instance on the referenced DOM element and returns a `setOptions` function for configuring the chart.
+
+The `onMounted` lifecycle hook ensures that the chart configuration is applied only after the component's DOM has been rendered. Inside this hook, the `setOptions` function is called with a specific configuration object that defines the chart's appearance and data.
+
+The chart is configured as a smooth line chart with the following key properties:
+· `tooltip`: Appears when the user hovers over the chart's x-axis, with a vertical line pointer.
+· `grid`: Configured with minimal padding to maximize the chart area.
+· `xAxis`: A categorical axis representing the twelve months of the year (e.g., '1月' for January).
+· `yAxis`: A numerical value axis with a maximum limit of 8000.
+· `series`: Contains a single data series named '成交量' (Transaction Volume). The line is rendered as a smooth curve without data point symbols. The line style features a vertical linear gradient, transitioning from a solid color (`#009688`) to a semi-transparent color. The data for the chart is hardcoded as an array of numbers.
+
+**Note**: This component relies on the `useECharts` hook located in `@/hooks/web/useECharts` for its core chart-rendering functionality. The data displayed by the chart is static and defined within the component itself.
 ## FunctionDef invert_dictionary(mapping)
-**create_channel**: The function of create_channel is to create and return a `ProphetChannel` instance, which is a gRPC channel for communicating with the server.
+**EChartsProps**: Defines the properties for the ECharts React component.
+**Attributes**: The attributes of this type alias.
+· `option`: The ECharts chart configuration object, of type `ECOption`. This is where you define the chart's data, axes, series, title, and other visual elements.
+· `style`: The CSS styles for the chart's container `div`, of type `React.CSSProperties`.
+· `settings`: The settings for updating the chart, of type `SetOptionOpts`. These are passed as the second argument to the `echartsInstance.setOption` method.
+· `loading`: A boolean flag that controls the display of the loading animation on the chart.
+· `theme`: The theme to be used for the chart. It can be either a registered theme name (string) or a theme configuration object.
+· `onEvents`: An object for binding event listeners to the chart. Keys are the ECharts event names (e.g., 'click', 'legendselectchanged'), and values are the corresponding handler functions.
+· `opts`: The initialization options for the ECharts instance, of type `EChartsInitOpts`. These are passed to the `echarts.init` method when the chart is created.
+· `notMerge`: A boolean that determines whether to merge with the previous option when updating the chart via `setOption`. If `true`, the new option completely replaces the old one. The default value is `false`.
+· `lazyUpdate`: A boolean that, when `true`, defers the chart update. The update will be applied after the current batch of option modifications is complete. The default value is `false`.
+· `onChartReady`: A callback function that is invoked when the chart instance is initialized and ready. It receives the ECharts instance as its only argument, allowing for direct interaction with the chart API.
+· `loadingOption`: An object to configure the appearance and behavior of the loading animation, which is passed to the `echartsInstance.showLoading` method.
+· `showLoading`: A deprecated boolean to show the loading animation. Use the `loading` prop instead.
+· `echarts`: An optional property to provide a custom ECharts core object. This is useful for advanced scenarios like using a custom ECharts build or managing different ECharts versions within an application.
+**Code Description**: The `EChartsProps` type is a TypeScript type alias that specifies the complete set of valid properties (props) for a React component designed to render an ECharts chart. It is constructed by taking all standard HTML attributes for a `<div>` element from `React.HTMLAttributes<HTMLDivElement>` and omitting the original `style` attribute. This is done to provide a more specific `style` property typed as `React.CSSProperties` for improved type-safety.
 
-**Parameters**:
-· target: The server address to connect to, formatted as a string (e.g., 'host:port').
-· root_certificates: Optional. The PEM-encoded root certificates for server authentication in a secure TLS connection. Defaults to `None`.
-· private_key: Optional. The PEM-encoded private key for client authentication in a mutual TLS setup. Defaults to `None`.
-· certificate_chain: Optional. The PEM-encoded certificate chain for client authentication in a mutual TLS setup. Defaults to `None`.
-· options: An optional list of key-value tuples (`List[Tuple[str, Any]]`) to configure the underlying gRPC channel. This is a keyword-only argument.
-· compression: Optional. A gRPC compression method, such as `grpc.Compression.Gzip`, to be used on the channel. This is a keyword-only argument.
-· keepalive_time_ms: An integer specifying the gRPC keepalive time in milliseconds. If set to a positive value, it sends periodic pings to keep the connection alive. A value of 0 disables this feature. The default is 0. This is a keyword-only argument.
-
-**Code Description**: This function serves as a factory for creating `ProphetChannel` objects. It simplifies the instantiation process by accepting all necessary configuration parameters for a gRPC channel. The parameters include the server's `target` address, security credentials for establishing a secure connection (`root_certificates`, `private_key`, `certificate_chain`), and other advanced gRPC settings like `options`, `compression`, and `keepalive_time_ms`. The function takes all the provided arguments and forwards them directly to the constructor of the `ProphetChannel` class, subsequently returning the newly created instance.
-
-**Note**: To establish a secure channel, the `root_certificates` parameter must be provided. If it is omitted, an insecure channel will be created. The `private_key` and `certificate_chain` parameters are only used for client-side authentication in a mutual TLS (mTLS) scenario and also require `root_certificates` to be set.
-
-**Returns**:
-**ProphetChannel**: The function returns a `ProphetChannel` object. This object represents the communication channel to the gRPC server and can be used to invoke remote procedures. It is designed to be used as a context manager (with a `with` statement) to ensure that the channel is properly closed after use.
+The type then adds a collection of ECharts-specific properties. The most crucial property is `option`, which holds the entire chart configuration. Other properties allow for extensive customization and control, including `style` and `theme` for visual styling, `loading` and `loadingOption` for managing the loading state, and `opts` for configuring the chart instance on initialization. It also provides props that map directly to the ECharts `setOption` API, such as `notMerge`, `lazyUpdate`, and `settings`, to fine-tune how chart options are updated. Event handling is managed through the `onEvents` object, and the `onChartReady` callback provides a way to access the underlying ECharts instance for imperative operations.
+**Note**: The `showLoading` property is deprecated and will be removed in a future version. It is recommended to use the `loading` property to control the visibility of the loading animation. Many properties in `EChartsProps`, such as `opts`, `notMerge`, `lazyUpdate`, and `loadingOption`, serve as direct proxies to the parameters in the native Apache ECharts API methods (`echarts.init`, `setOption`, `showLoading`). This makes the component intuitive for developers who are already familiar with the ECharts library.
 ## FunctionDef is_palindrome(text)
-**add_document**: The function of add_document is to add a single document to the knowledge base.
-**Parameters**: The parameters of this method.
-· document: A `Document` object to be added to the knowledge base.
-**Code Description**: This method is responsible for incorporating a new document into the vector store managed by the `KnowledgeBase`. The process begins with a check to determine if the internal vector store, `self.vector_store`, has been initialized. If the vector store is `None`, it signifies that this is the first document being added to the knowledge base. In this case, the method calls the private helper method `_initialize_vector_store`, passing the new document within a list to create and configure the vector store. If the `vector_store` already exists, the method simply adds the new document to the existing store by calling the `add_documents` method of the `vector_store` instance.
-**Note**: The vector store is initialized lazily. It is only created upon the addition of the first document, either through this method or the `add_documents` method.
+**IsMobileBrowser**: Determines if the provided user agent string belongs to a mobile browser.
+**Parameters**: The parameters of this function.
+· userAgent: A `String` representing the user agent of the web client being inspected.
+**Code Description**: This private helper function is used to identify whether a web request originates from a mobile browser. It takes a user agent string as input and checks for the presence of specific keywords that commonly indicate a mobile device. The logic checks if the `userAgent` string contains the substring "Mobile" or the substring "Android". If either of these keywords is found, the function determines that the client is a mobile browser.
+**Note**: This method of browser detection relies on the user agent string, which is not always a guaranteed indicator of the device type, as it can be modified by the user or network proxies. This function is `private` and intended for internal use within the `PaylikeClient` class.
+**Return**: The function returns a `Bool` value. It returns `true` if the `userAgent` string contains "Mobile" or "Android", indicating a mobile browser. Otherwise, it returns `false`.

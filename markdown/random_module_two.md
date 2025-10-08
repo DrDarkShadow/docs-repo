@@ -1,43 +1,63 @@
 ## FunctionDef count_vowels(text)
-**run**: La función de `run` es definir la interfaz abstracta para ejecutar una operación.
-**Parámetros**: Los parámetros de este método.
-· input (Sequence[Dict[str, Any]]): La entrada para la operación, que es una secuencia de diccionarios donde cada diccionario representa un elemento de datos.
+**_AsyncTornadoEngine**: The `_AsyncTornadoEngine` class is a wrapper around the Tornado IOLoop designed to run a specified asynchronous function and manage its lifecycle.
 
-**Descripción del Código**: Este método es una parte fundamental de la clase abstracta `Base`. Establece el contrato estándar que todas las operaciones (`Ops`) dentro del marco de `uniflow` deben seguir. Cualquier clase que herede de `Base` debe sobrescribir este método `run` con su propia lógica específica. El método está diseñado para tomar una secuencia de diccionarios como entrada y producir una secuencia de diccionarios como salida, asegurando la compatibilidad entre diferentes operaciones en un flujo de trabajo. La implementación base no realiza ninguna operación; en su lugar, lanza una excepción `NotImplementedError` si se invoca. Esto obliga a las clases derivadas a implementar su propia lógica de ejecución, garantizando que cada operación tenga un comportamiento definido. El mensaje de error indica qué clase no ha implementado el método `run`.
+**Attributes**: The attributes of this class.
+· io_loop: An instance of `tornado.ioloop.IOLoop`. This is the core event loop that manages and executes asynchronous operations.
+· _exit_future: An instance of `tornado.concurrent.Future`. This future is used as a signal to gracefully terminate the event loop.
+· _exit_results: A dictionary used to store results or status information upon the termination of the engine.
 
-**Nota**: Este es un método abstracto y debe ser implementado por cualquier subclase de `Base`. Llamarlo directamente desde una subclase que no lo ha sobrescrito resultará en un error `NotImplementedError`.
+**Code Description**: The `_AsyncTornadoEngine` provides a simple mechanism for running a task within a Tornado event loop and stopping it from an external context.
+Upon initialization, a new `IOLoop` is created to handle asynchronous tasks, along with a `Future` object (`_exit_future`) that acts as a shutdown signal.
+The `run` method is the entry point for starting the engine. It takes a target function `main_f` and its arguments. This function is scheduled to run on the `IOLoop` using `add_callback`, which ensures it executes once the loop starts. The `io_loop.start()` call then blocks and begins processing events. The loop continues to run until its `stop` method is called.
+The `stop` method provides the mechanism for shutting down the engine. It first resolves the `_exit_future` and then calls `self.io_loop.stop()`, which causes the `io_loop.start()` call in the `run` method to return, effectively ending the process.
 
-**Retorno**:
-Sequence[Dict[str, Any]]: La salida de la operación, que es una secuencia de diccionarios.
+**Note**: This class is an internal utility designed to manage the event loop for the rendezvous process in elastic training. The leading underscore in its name indicates it is not intended for public use.
+
+**Return Value**:
+· run: Returns the `_exit_results` dictionary, which may contain information collected during the engine's shutdown process.
 ## FunctionDef pairwise_sum(numbers)
-**is_point_in_polygon**: Determines whether a given point is located inside a specified polygon.
-**Parameters**:
-· point (tuple): A tuple containing the (x, y) coordinates of the point to be checked.
-· polygon (list[tuple]): A list of tuples, where each tuple represents the (x, y) coordinates of a vertex of the polygon. The vertices must be provided in a sequential order that defines the polygon's boundary.
-**Code Description**: This function implements the Ray Casting algorithm to ascertain if a point lies within the boundaries of a polygon. The algorithm works by casting a horizontal ray from the given point to the right and counting the number of times this ray intersects with the edges of the polygon.
+**UpdateCasbin**: 该函数的功能是更新指定角色ID在Casbin中的策略规则。
 
-The function iterates through each edge of the polygon, defined by two consecutive vertices. For each edge, it performs a series of checks to determine if the horizontal ray from the point intersects it. An intersection occurs if:
-1. The y-coordinate of the point lies between the y-coordinates of the edge's endpoints. This ensures the ray and the edge are at the same vertical level.
-2. The point is to the left of the edge's rightmost x-coordinate. This is a preliminary check to quickly discard edges that are entirely to the left of the point.
-3. If the edge is not horizontal, the function calculates the exact x-coordinate (`xinters`) where the horizontal ray intersects the line formed by the edge. An intersection is counted only if the point's x-coordinate is less than or equal to this intersection's x-coordinate.
+**参数**: 此函数的参数。
+· authorityID: 字符串类型，代表角色的ID。
+· casbinInfos: `[]model.CasbinInfo` 类型，一个包含新策略规则信息的切片，其中每个元素定义了一条API权限（路径和方法）。
 
-A boolean flag `inside` is initialized to `False` and is toggled each time a valid intersection is detected. According to the algorithm, if the total number of intersections is odd, the point is inside the polygon. If the number is even (or zero), the point is outside. The final value of the `inside` flag is returned.
-**Note**: This function is designed for simple polygons (polygons that do not intersect themselves). The result for points lying exactly on a horizontal edge of the polygon may vary, as the algorithm is specifically designed to handle intersections by counting crossings.
-**Return**:
-· bool: Returns `True` if the point is inside the polygon, otherwise returns `False`.
+**代码说明**: 该函数用于更新一个角色（由`authorityID`标识）的API访问权限。函数首先会清除该角色所有旧的权限规则，然后添加 `casbinInfos` 中定义的所有新权限规则。
+具体执行流程如下：
+1.  将传入的 `authorityID` 字符串前面加上 "p," 前缀，以符合Casbin策略中 "p" (policy) 规则的格式，例如 `p, <角色ID>, <API路径>, <请求方法>`。
+2.  调用 `ClearCasbin(0, authorityID)` 函数，清除该角色ID当前在Casbin中的所有策略规则。
+3.  创建一个 `rules` 切片，用于存储即将添加的新策略。
+4.  遍历传入的 `casbinInfos` 切片，对于其中的每一个 `CasbinInfo` 对象（包含 `Path` 和 `Method` 字段），构建一个 `model.CasbinModel` 实例。该实例的 `Ptype` 固定为 "p"，`V0` 为格式化后的角色ID，`V1` 为API路径，`V2` 为请求方法。
+5.  将构建好的 `CasbinModel` 转换为字符串切片 `[]string{"p", authorityID, v.Path, v.Method}`，并追加到 `rules` 中。
+6.  调用 `Casbin()` 函数获取一个Casbin执行器（enforcer）的单例。
+7.  使用 `e.AddPolicies(rules)` 方法将 `rules` 切片中的所有新策略规则批量添加到Casbin中。
+8.  检查 `AddPolicies` 的返回值。如果 `success` 为 `false`，表示添加失败（通常是因为存在重复的API规则），函数会返回一个包含 "存在相同api,添加失败,请联系管理员" 信息的错误。如果 `success` 为 `true`，则返回 `AddPolicies` 方法可能产生的其他错误（若无错误则为 `nil`）。
+
+**此函数与以下函数有关**:
+**ClearCasbin**: 删除指定的Casbin规则。
+**Casbin**: 返回SyncedEnforcer的单例实例。
+
+**注意**: 此函数执行的是“先删除后添加”的操作。为了保证数据的一致性和操作的原子性，强烈建议在数据库事务中调用此函数。
+
+**返回值**
+此函数返回一个error对象。如果更新成功，则返回nil。如果因存在重复的API规则导致添加失败，则返回一个包含信息“存在相同api,添加失败,请联系管理员”的错误。
 ## FunctionDef split_into_chunks(text, size)
-**SgOptimizer**: A custom optimizer used to update only the search parameters of quantization-aware training, while keeping the original network weights frozen.
-**Parameters**:
-· params (list[Parameter]): A list of the original network's trainable parameters. These parameters are not updated by this optimizer.
-· quant_params (list[Parameter]): A list of trainable quantization parameters (e.g., `h` and `t` in SLB) that need to be optimized.
-· learning_rate (float): The learning rate used for the optimization. It determines the step size for updating `quant_params`. Default: 1e-5.
-**Code Description**:
-The `SgOptimizer` class is a specialized optimizer that inherits from `mindspore.nn.Optimizer`. Its primary role is to facilitate the search phase in quantization algorithms like Searchable-Layer-wise Batch-normalization (SLB).
+**DagreLayout**: The function of DagreLayout is to create, configure, and render a directed acyclic graph (DAG) into an SVG image file.
 
-In its initialization method `__init__`, it accepts two sets of parameters: `params` (the model's original weights) and `quant_params` (the quantization search parameters). However, it only passes `quant_params` to the parent `Optimizer` class, effectively instructing the training framework that only these parameters should be considered for optimization by this optimizer. The original model weights (`params`) are ignored, thus they remain frozen during the training steps that use `SgOptimizer`.
+**Attributes**: The attributes of this class, configured during initialization.
+· rankdir (str): The direction of the graph layout. Can be 'TB' (Top to Bottom), 'BT' (Bottom to Top), 'LR' (Left to Right), or 'RL' (Right to Left). The default is 'TB'.
+· ranksep (int): The amount of vertical separation between ranks (layers) in pixels. The default is 20.
+· nodesep (int): The amount of horizontal separation between nodes in the same rank in pixels. The default is 20.
 
-The core logic resides in the `construct` method, which is executed during each training step. It receives the gradients calculated for the `quant_params`. The method then iterates through each parameter in `self.quant_params` and its corresponding gradient. For each parameter, it applies the standard gradient descent update rule: the parameter's value is updated by subtracting its gradient multiplied by the `learning_rate`. This update is performed in-place using the `mindspore.ops.assign_sub` operation for efficiency. Finally, the method returns `True` to signal that the parameter update step has been successfully completed.
-**Note**:
-This optimizer is specifically designed for algorithms where certain parameters (like quantization scales or thresholds) need to be searched and optimized while the base model weights are kept constant. It must be used within a MindSpore training pipeline, typically wrapped by a cell like `TrainOneStepCell`, to manage the training process.
+**Code Description**: This class serves as a high-level interface for creating graph visualizations using the `dagre-py` library. Upon initialization, it creates a `dagre.Dagre` graph object and sets its layout configuration properties, such as the layout direction (`rankdir`) and the spacing between nodes (`ranksep`, `nodesep`).
+
+The `add_node` method allows you to add individual nodes to the graph. Each node is identified by a unique `node_id` and has specified dimensions (`width` and `height`).
+
+The `add_edge` method is used to create a directed connection from a source node (`u_of_edge`) to a target node (`v_of_edge`). Optional parameters such as `label`, `minlen` (minimum length), and `weight` can be provided to customize the edge's appearance and influence the layout.
+
+The `save` method finalizes the graph creation process. It first calls the layout engine to calculate the optimal positions for all nodes and edges. It then renders the resulting graph into an SVG format and writes it to the file specified by the `path` argument.
+
+**Note**: This class requires the `dagre-py` library to be installed in the environment to function correctly. The output generated by the `save` method is an SVG (Scalable Vector Graphics) image file.
+
 **Returns**:
-(bool): Returns `True` to indicate that the optimization step was successful.
+The `save` method returns the SVG content of the generated graph as a string.

@@ -1,101 +1,46 @@
 ## FunctionDef num(a, b)
-**memcached_server_st**: This structure represents a single memcached server instance, encapsulating all necessary information for a client to connect and interact with it.
+**FGDSpringDamper**: This component simulates a spring-damper system, applying forces to a Rigidbody to attract it towards a specified target position.
+**Attributes**: The attributes of this component.
+· Target: A `Transform` representing the destination point that the spring will pull the object towards.
+· Strength: A `float` value that determines the stiffness or strength of the spring. Higher values result in a stronger pull towards the target.
+· Damping: A `float` value that determines the amount of damping applied to the spring's motion. Damping reduces oscillation and helps the object settle at the target position.
+**Code Description**: This script must be attached to a `GameObject` that has a `Rigidbody` component. During the `Awake` phase, the script retrieves and stores a reference to the `Rigidbody` component for later use. If no `Rigidbody` is found, a warning is logged to the console.
 
-**Attributes**: The fields of this struct.
-· options: A nested structure containing boolean flags about the server's state.
-  · is_allocated: A flag indicating if the structure was dynamically allocated.
-  · is_initialized: A flag indicating if the structure has been initialized.
-  · is_shutting_down: A flag set to true when the server connection is in the process of being shut down.
-  · is_dead: A flag indicating that the server has been marked as dead and is temporarily out of rotation.
-· number_of_hosts: The number of hosts associated with this server instance. This is typically 1.
-· cursor_active: An index indicating the currently active host address being used for the connection.
-· port: The port number of the server.
-· fd: The file descriptor for the socket connection to the server.
-· io_bytes_sent: A counter for the total number of bytes sent to this server. This field is only used when the `MEMCACHED_BEHAVIOR_IO_BYTES_WATERMARK` behavior is enabled.
-· io_wait_count: A counter for the number of times an I/O operation had to wait. This field is only used when the `MEMCACHED_BEHAVIOR_IO_WAIT_COUNT_WATERMARK` behavior is enabled.
-· major_version, minor_version, micro_version: The major, minor, and micro version numbers of the remote memcached daemon.
-· next: A pointer to the next `memcached_server_st` in a doubly-linked list of servers.
-· prev: A pointer to the previous `memcached_server_st` in a doubly-linked list of servers.
-· root: A pointer to the parent `memcached_st` structure that owns this server instance.
-· state: The current state of the connection to the server, defined by the `memcached_server_state_t` enum.
-· error_messages: A pointer to a list of error messages associated with this server.
-· read_ptr: A pointer to the current position in the `read_buffer`.
-· read_buffer_length: The amount of data currently stored in the `read_buffer`.
-· read_data_length: The total length of the data block being read from the server.
-· write_buffer_offset: The current write offset within the `write_buffer`.
-· address_info: A pointer to an `addrinfo` structure, containing network address information for the server.
-· address_info_next: A pointer used to iterate through multiple `addrinfo` structures if a hostname resolves to multiple IP addresses.
-· limit_maxbytes: The maximum item size (`-I` option) supported by the remote memcached daemon.
-· read_buffer: A buffer used for reading data from the server socket.
-· write_buffer: A buffer used for writing data to the server socket.
-· hostname: The hostname, IP address, or path to a UNIX socket for the server.
-· sockaddr: A structure holding the binary socket address and port information.
-· weight: The weight assigned to this server, used for consistent hashing algorithms.
-· version: A counter that increments each time the server's state changes, used for caching lookups.
-· server_failure_counter: A counter for the number of consecutive connection failures for this server.
-· server_failure_counter_query_id: The query ID at which the `server_failure_counter` was last modified.
-· last_io_timestamp: The timestamp of the last successful I/O activity on this server connection.
-· next_retry: The timestamp indicating when the client should next attempt to connect to this server if it has been marked as dead.
-· continuum_count: The number of points this server occupies on the consistent hashing ring (continuum).
-· continuum_points: The server's points on the continuum for consistent hashing.
-· my_offset: The index of this server within the server list of the parent `memcached_st` structure.
-· port_str: A string representation of the server's port number.
-· type: The connection type (TCP, UDP, or UNIX socket), defined by the `memcached_connection_t` enum.
-· supported_auth_sasl_mechanisms: A string listing the SASL authentication mechanisms supported by the server.
+The core logic resides in the `FixedUpdate` method, which is executed at a fixed time interval, making it suitable for physics calculations. In each `FixedUpdate` call, the script first checks if the `Target` transform has been assigned. If a `Target` exists, it calculates two forces: a spring force and a damping force.
 
-**Code Description**: The `memcached_server_st` structure is a core component of `libmemcached`, representing a single memcached server in a pool. Each instance holds comprehensive details required for managing a connection, from basic network information like `hostname` and `port` to low-level connection state like the socket file descriptor (`fd`), I/O buffers (`read_buffer`, `write_buffer`), and connection status (`state`).
+The spring force is calculated based on the displacement vector between the object's current position and the `Target`'s position, multiplied by the `Strength` property. This force pulls the object directly towards the target, acting like a spring.
 
-These structures are typically organized as a doubly-linked list within a main `memcached_st` client object, with `next` and `prev` pointers forming the list. The `root` pointer provides a back-link to the parent client instance.
+The damping force is calculated by multiplying the object's current velocity by the `Damping` property and then negating the result. This force opposes the object's motion, slowing it down and preventing it from oscillating endlessly around the target.
 
-This structure also plays a crucial role in features like server weighting (`weight`) and consistent hashing (`continuum_points`), which determine how keys are distributed across the available servers. It tracks server health and failover behavior through fields like `server_failure_counter` and `next_retry`, allowing the client to intelligently manage dead or unresponsive servers.
-
-**Relationship**:
-· memcached_st [r1]: The `memcached_server_st` is a fundamental part of the `memcached_st` structure. A `memcached_st` instance manages a collection of one or more `memcached_server_st` instances, which represent the pool of memcached servers the client will communicate with. The `root` field in `memcached_server_st` points back to the parent `memcached_st` object that contains it.
-
-**Note**: Developers should generally not modify the fields of this structure directly. Instead, they should rely on the provided `libmemcached` API functions (e.g., `memcached_server_add`, `memcached_server_push`, `memcached_server_list_free`) to add, manage, and remove server instances. Direct manipulation can lead to an inconsistent state and unpredictable behavior in the client library.
+Finally, the script applies the sum of the spring force and the damping force to the `Rigidbody` using the `AddForce` method. This results in a smooth, physically-based movement towards the target, mimicking the behavior of a real-world spring-damper system.
+**Note**: This component will not function without a `Rigidbody` component attached to the same `GameObject`. The `Strength` and `Damping` values should be carefully tuned to achieve the desired behavior. Setting `Strength` too high or `Damping` too low can lead to unstable or overly bouncy motion. The physics calculations are performed in `FixedUpdate` to ensure frame rate independence and stability.
 ## FunctionDef generate_random_integers(count, start, end)
-**getProptype**: The function of getProptype is to retrieve a React PropTypes validator either by its string name or by returning the validator if it's already provided.
-**Parameters**: The parameters of this function.
-· type: `string | function` - The type of prop to validate. This can be a string representing the name of a standard PropTypes validator (e.g., 'string', 'number') or a PropTypes validator function itself (e.g., `PropTypes.string`).
-**Code Description**: The `getProptype` function is a utility designed to provide flexibility when specifying property types. It first checks if the provided `type` argument is a string. If it is, the function assumes this string is the name of a validator within the `PropTypes` library and attempts to access and return it using property accessor notation (e.g., `PropTypes[type]`). If the `type` argument is not a string, the function assumes it is already a valid PropTypes validator function and returns it directly without any modification. This allows developers to use either a string identifier or a direct function reference to specify the desired validator.
-**Return**: `function | undefined` - It returns the corresponding PropTypes validator function. If the `type` is a string that does not match any key in the `PropTypes` object, it will return `undefined`. If the `type` is a function, it is returned as is.
+**useFormLayout**: This is a custom React hook for accessing the form layout context.
+**Code Description**: The `useFormLayout` hook is designed to retrieve the current layout configuration from the `FormLayoutContext`. Internally, it is a simple wrapper around the standard React `useContext` hook, to which it passes the `FormLayoutContext`. This allows any component within the component tree wrapped by `FormLayoutContext.Provider` to easily access shared layout properties, such as label alignment, column widths, and layout direction. By using this hook, components can reactively update when the form layout context changes, ensuring a consistent and centralized approach to form styling.
+**Note**: This hook must be used within a component that is a descendant of the `FormLayoutContext.Provider`. If it is used outside of such a provider, it will return the default value that `FormLayoutContext` was created with.
+**Return**: It returns the current context value of `FormLayoutContext`. This value is an object that contains the properties defining the layout of form components, which may include settings like `labelCol`, `wrapperCol`, `layout`, `colon`, etc.
 ## FunctionDef choose_random_item(items)
-**FGDAssetsProcessEditorUtility**: The function of FGDAssetsProcessEditorUtility is to provide a collection of static helper methods for managing assets within the Unity Editor, such as creating ScriptableObjects and managing folder structures.
-
-**Public Methods**: The public methods of this class.
-· CreateAsset<T>(string path, string name, string sufix = ".asset"): Creates a new ScriptableObject asset of type T at the specified project path.
-· GetScriptableObjectAsset<T>(): Searches the project for and returns the first ScriptableObject asset of the specified type T.
-· CreateFolderByPath(string path): Creates a folder at the specified path, including any necessary parent directories that do not already exist.
-· IsFolder(string path): Checks if the given path corresponds to an existing folder in the project.
-
-**Code Description**: The `FGDAssetsProcessEditorUtility` is a static class that cannot be instantiated and is intended for use exclusively within the Unity Editor environment. It leverages the `UnityEditor` API to provide convenient functions for asset manipulation.
-
-The `CreateAsset<T>` method facilitates the creation of `ScriptableObject` instances as `.asset` files. It first ensures the target directory exists by calling `CreateFolderByPath`. Then, it instantiates the `ScriptableObject` of the generic type `T`, generates a unique asset path to avoid name collisions, creates the asset file on disk using `AssetDatabase.CreateAsset`, saves the changes, and finally highlights the newly created asset in the Project window for immediate user feedback.
-
-The `GetScriptableObjectAsset<T>` method is used to find an existing asset. It queries the project's `AssetDatabase` for all assets matching the type `T` and returns the first one it finds. If no asset of the specified type exists in the project, it returns `null`.
-
-The `CreateFolderByPath` method is a utility for directory management. It recursively checks if the parent directories of the given path exist, creating them if they do not, until the entire folder structure is built.
-
-The `IsFolder` method is a straightforward wrapper around the `AssetDatabase.IsValidFolder` function, providing a simple way to verify if a given string path points to a folder.
-
-**Note**: This utility class and all its methods are designed to run only within the Unity Editor. They are dependent on the `UnityEditor` namespace and will not function in a standalone build of the application. Code utilizing this class must be placed within a folder named "Editor" in your Unity project. Also, be aware that `GetScriptableObjectAsset<T>` returns only the first asset found of a given type; if multiple assets of the same type exist, the specific one returned depends on the internal order of the Asset Database.
+**make_sparse_from_indices_and_values**: **Constructs a TFF computation that builds a `tf.SparseTensor` from its component computations.**
+**Parameters**: The parameters of this function.
+· indices: A `tff.Computation` that returns the indices of the sparse tensor. This computation must yield a `tf.int64` tensor of shape `[N, D]`, where `N` is the number of non-zero elements and `D` is the rank of the tensor.
+· values: A `tff.Computation` that returns the non-zero values of the sparse tensor. This computation must yield a tensor of shape `[N]`, where `N` is the number of non-zero elements. The data type of this tensor determines the data type of the resulting sparse tensor.
+· dense_shape: A `tff.Computation` that returns the shape of the equivalent dense tensor. This computation must yield a `tf.int64` tensor of shape `[D]`, where `D` is the rank of the tensor.
+**Code Description**: This function is a helper utility for creating a representation of a `tf.SparseTensor` within the TFF framework. It takes three separate `tff.Computation` objects as input: one for the `indices`, one for the `values`, and one for the `dense_shape`. These are the three components required to define a sparse tensor. The function then uses `computation_impl.ConcreteComputation.from_tensorflow` to wrap underlying TensorFlow logic for sparse tensor construction into a new, single `tff.Computation`. It programmatically defines the function signature for this new computation, specifying that it accepts the results of the input computations as parameters. Finally, it invokes the newly created computation with the provided `indices`, `values`, and `dense_shape` computations, composing them into one computation that produces the sparse tensor.
+**Returns**: A `tff.Computation` that, when executed, returns a `tff.Value` representing the constructed `tf.SparseTensor`.
 ## FunctionDef shuffle_copy(items)
-**FGDriveItem**: This class serves as a data model to represent a file or folder resource within a drive, encapsulating its various metadata properties.
+**sort**: Sorts a DataFrame based on the given column(s) and sort orders.
 
-**Attributes**: The attributes of this class.
-· id: The unique identifier for the drive item.
-· name: The name of the drive item (e.g., "document.docx" or "My Photos").
-· parentReference: A reference object (`FGDriveReference`) containing information about the parent directory of this item.
-· file: If the item is a file, this property holds a `FGFile` object with file-specific metadata, such as MIME type. It will be `null` for a folder.
-· folder: If the item is a folder, this property holds a `FGFolder` object with folder-specific metadata, such as child count. It will be `null` for a file.
-· size: The total size of the item in bytes. For a folder, this might represent the size of its content.
-· lastModifiedDateTime: The date and time the item was last modified, in UTC.
-· createdDateTime: The date and time the item was created, in UTC.
-· cTag: The content tag (cTag), which is an eTag that changes when the content of the item changes. This is useful for tracking content updates.
-· eTag: The entity tag (eTag), which is a unique identifier for the version of the item. It changes whenever the item's metadata or content is modified.
-· webUrl: A URL that provides browser-based access to the item.
-· downloadUrl: A short-lived URL for downloading the content of the file. This URL is not always present and is typically generated on-demand.
+**Parameters**:
+· df (DataFrame): The input DataFrame that needs to be sorted.
+· cols (List[Union[str, bool]]): A list containing column names as strings, where each name can be optionally followed by a boolean to specify the sort order. `True` indicates ascending order, and `False` indicates descending order. If a boolean is not provided after a column name, the sort order defaults to ascending.
 
-**Code Description**: The `FGDriveItem` class is a plain data structure designed to map JSON data received from a cloud storage API into a C# object. The `[JsonProperty]` attributes on each property specify the corresponding field name in the JSON payload, facilitating serialization and deserialization using the Newtonsoft.Json library. This includes handling special JSON property names like "@microsoft.graph.downloadUrl". The class represents a generic item in a drive, which can be either a file or a folder. The type of the item can be determined by checking which of the `file` or `folder` properties is not `null`. This model provides a comprehensive set of metadata, including identifiers, names, timestamps, size, and unique URLs for web access and direct download.
+**Code Description**:
+This function sorts a DataFrame by applying an `ORDER BY` clause to the underlying SQL query. The implementation is recursive, processing one column at a time from the `cols` list. For each column, it checks if the next element in the list is a boolean to determine the sort direction. If no boolean is specified, the default order is ascending.
 
-**Note**: When using this class, always check if the `file` or `folder` property is `null` to determine whether the item is a file or a folder before accessing their specific members. The `downloadUrl` is time-sensitive and should be used immediately after it is obtained, as it is designed to expire after a short period.
+A nested helper function, `sort_by_col`, is responsible for sorting by a single column. It constructs the appropriate `ORDER BY` SQL clause, adding a `DESC` keyword if the order is descending. This clause is then applied to the DataFrame's query via the `_apply_query` method, which generates a new DataFrame. The main `sort` function then calls itself with this new DataFrame and the remaining columns to be sorted. This process continues until all specified columns have been processed, resulting in a fully sorted DataFrame.
+
+**Note**:
+This is an eager transformation, not a lazy one. Calling this function immediately triggers a new job on BigQuery and will create a new table behind the scenes to store the sorted results. This is different from lazy transformations, which only modify the query plan without executing it.
+
+**Returns**:
+A new DataFrame sorted by the specified column(s).
