@@ -1,52 +1,32 @@
 ## FunctionDef fibonacci(n)
-**CancellationToken**: The CancellationToken struct propagates notifications that an operation should be canceled.
-
-**Properties**:
-· None: A static property that returns a cancellation token which can never be in a canceled state. It is useful for methods that require a `CancellationToken` but for which cancellation is not desired.
-· IsCancellationRequested: A boolean property that indicates whether cancellation has been requested for this token. If `true`, the listening operation should terminate.
-· CanBeCanceled: A boolean property that indicates whether this token has the capability of being canceled. If `false`, `IsCancellationRequested` will always be `false`.
-· WaitHandle: Gets a `System.Threading.WaitHandle` that is signaled when the token is canceled. This allows cancellation to be integrated with other synchronization mechanisms that rely on `WaitHandle` objects.
-
-**Code Description**:
-`CancellationToken` is a lightweight struct used to implement a cooperative cancellation model for asynchronous or long-running operations. It provides a unified mechanism for requesting the cancellation of one or more operations. A `CancellationToken` does not initiate cancellation itself; rather, it acts as a listener for a cancellation request issued by a `CancellationTokenSource`.
-
-Operations that support cancellation accept a `CancellationToken` as a parameter. The code within the operation can then monitor the state of this token. There are three primary ways to do this:
-1.  **Polling**: The operation can periodically check the value of the `IsCancellationRequested` property. If this property returns `true`, the operation should stop its work gracefully, clean up any resources, and exit.
-2.  **Callback Registration**: A callback delegate can be registered with the token by calling the `Register` method. This delegate will be executed once when the associated `CancellationTokenSource`'s `Cancel` method is called.
-3.  **Exception Throwing**: The `ThrowIfCancellationRequested` method provides a convenient way to handle cancellation. It checks if `IsCancellationRequested` is `true`, and if so, throws an `OperationCanceledException`. This pattern is commonly used in asynchronous methods to transition the associated `Task` into the `Canceled` state.
-
-The default constructor (`new CancellationToken()`) creates a token that cannot be canceled, which is equivalent to the `CancellationToken.None` property. `CancellationToken.None` is the idiomatic and recommended way to obtain a non-cancelable token.
-
-**Relationship with CancellationTokenSource**:
-A `CancellationToken` is created and managed by an instance of the `CancellationTokenSource` class. You obtain a token from a source by accessing its `Token` property. A single `CancellationTokenSource` can provide tokens for multiple operations. When the `Cancel()` method is called on the `CancellationTokenSource`, all copies of the `CancellationToken` obtained from that source will transition to the canceled state, and their `IsCancellationRequested` property will become `true`.
-
-**Note**:
-Because `CancellationToken` is a struct (a value type), it is efficient to pass as a parameter to methods. It is the responsibility of the code receiving the `CancellationToken` to monitor it and respond to a cancellation request. The cancellation is cooperative and not preemptive; the operation will not be forcibly terminated against its will.
-
-**Return Value of Register Method**:
-The `Register` method returns a `CancellationTokenRegistration` object. This object represents the registration of the callback delegate. To unregister the callback and prevent it from being called (for example, if the operation completes successfully), you can call the `Dispose` or `Unregister` method on the returned `CancellationTokenRegistration` object. This is important for preventing resource leaks and unintended behavior.
-## FunctionDef invert_dictionary(mapping)
-**EChartsBaseController**: Provides an abstract base structure for controllers that generate and save ECharts visualizations.
+**FGDAssetsModule**: The function of FGDAssetsModule is to provide a static utility for loading and caching game assets, specifically textures, to optimize performance.
 **Attributes**: The attributes of this class.
-· data_path (str): The file path for the input data.
-· save_path (str): The directory path where the generated chart HTML file will be saved.
-· file_name (str): The name of the output HTML file.
-· chart (object): A placeholder for the ECharts chart instance. It is initialized as `None` and should be assigned a chart object in the `init_echarts_options` method of a subclass.
-· data_frame (object): A placeholder for the loaded data, typically a pandas DataFrame. It is initialized as `None` and populated by the `load_data` method of a subclass.
-**Code Description**: The `EChartsBaseController` is an abstract base class (`ABC`) that defines a standardized workflow for creating ECharts charts. It is designed to be inherited, not instantiated directly. The constructor (`__init__`) initializes the controller with paths for data input and chart output. Upon initialization, it sequentially calls the `load_data` and `init_echarts_options` methods to orchestrate the chart creation process.
+· _cache: A private static `Dictionary<string, Texture2D>` used to store texture assets that have already been loaded. It uses the asset's file path as the key and the `Texture2D` object as the value.
+**Code Description**: The FGDAssetsModule class serves as a centralized asset management utility. It features a static method, `GetSprite`, which is designed to retrieve `Texture2D` resources efficiently. When `GetSprite` is called with a resource path, it first checks an internal static cache, `_cache`, to determine if the texture has been previously loaded. If a cached version exists, it is returned immediately, which avoids redundant disk access and improves performance. If the texture is not found in the cache, the method proceeds to load it from the specified path using Godot's `ResourceLoader.Load<Texture2D>()`. Once the texture is successfully loaded, it is added to the `_cache` so that subsequent requests for the same asset can be served from memory. This caching strategy ensures that each unique texture is loaded from the file system only once per application session.
+**Note**: Since this is a static class, you do not need to create an instance of `FGDAssetsModule` to use its methods. The cache persists for the lifetime of the application run. If an asset on disk is changed while the application is running, the old, cached version will continue to be returned until the application is restarted.
+**Return**: The return value of this class's methods.
+· GetSprite(string path): Returns the `Texture2D` object corresponding to the given path. If the texture is already in the cache, the cached instance is returned. Otherwise, it is loaded from the file system, added to the cache, and then returned. If `ResourceLoader.Load` fails to find or load the resource at the given path, this method will return `null`.
+## FunctionDef invert_dictionary(mapping)
+**create_channel**: The function of create_channel is to create and return a `ProphetChannel` instance, which is a gRPC channel for communicating with the server.
 
-The class includes two abstract methods that must be implemented by any subclass:
-· `load_data()`: This method is responsible for loading data from the path specified by the `data_path` attribute and storing it, typically in the `data_frame` attribute.
-· `init_echarts_options()`: This method is responsible for creating a specific ECharts chart instance (e.g., a Bar or Line chart from `pyecharts`), configuring its options using the loaded data, and assigning it to the `self.chart` attribute.
+**Parameters**:
+· target: The server address to connect to, formatted as a string (e.g., 'host:port').
+· root_certificates: Optional. The PEM-encoded root certificates for server authentication in a secure TLS connection. Defaults to `None`.
+· private_key: Optional. The PEM-encoded private key for client authentication in a mutual TLS setup. Defaults to `None`.
+· certificate_chain: Optional. The PEM-encoded certificate chain for client authentication in a mutual TLS setup. Defaults to `None`.
+· options: An optional list of key-value tuples (`List[Tuple[str, Any]]`) to configure the underlying gRPC channel. This is a keyword-only argument.
+· compression: Optional. A gRPC compression method, such as `grpc.Compression.Gzip`, to be used on the channel. This is a keyword-only argument.
+· keepalive_time_ms: An integer specifying the gRPC keepalive time in milliseconds. If set to a positive value, it sends periodic pings to keep the connection alive. A value of 0 disables this feature. The default is 0. This is a keyword-only argument.
 
-The class also provides a concrete method, `save_echarts()`. This method handles the file-saving logic. It first ensures that the target directory specified by `save_path` exists, creating it if necessary. It then combines the `save_path` and `file_name` to form the full destination path and calls the `render()` method on the `self.chart` object to generate and save the chart as an HTML file. A confirmation message indicating the save location is printed to the console.
-**Relationship**: This class serves as a parent class for more specific chart controllers. Subclasses must inherit from `EChartsBaseController` and provide concrete implementations for the `load_data` and `init_echarts_options` abstract methods to create a functional chart generator for a specific chart type.
-**Note**: Since `EChartsBaseController` is an abstract base class, you cannot create an instance of it directly. You must create a subclass that implements the `load_data` and `init_echarts_options` methods. The `save_echarts` method assumes that the object assigned to `self.chart` has a `render(path)` method, which is standard for chart objects in libraries like `pyecharts`.
+**Code Description**: This function serves as a factory for creating `ProphetChannel` objects. It simplifies the instantiation process by accepting all necessary configuration parameters for a gRPC channel. The parameters include the server's `target` address, security credentials for establishing a secure connection (`root_certificates`, `private_key`, `certificate_chain`), and other advanced gRPC settings like `options`, `compression`, and `keepalive_time_ms`. The function takes all the provided arguments and forwards them directly to the constructor of the `ProphetChannel` class, subsequently returning the newly created instance.
+
+**Note**: To establish a secure channel, the `root_certificates` parameter must be provided. If it is omitted, an insecure channel will be created. The `private_key` and `certificate_chain` parameters are only used for client-side authentication in a mutual TLS (mTLS) scenario and also require `root_certificates` to be set.
+
+**Returns**:
+**ProphetChannel**: The function returns a `ProphetChannel` object. This object represents the communication channel to the gRPC server and can be used to invoke remote procedures. It is designed to be used as a context manager (with a `with` statement) to ensure that the channel is properly closed after use.
 ## FunctionDef is_palindrome(text)
-**remove**: The function of remove is to remove the first occurrence of a specified value from an array.
-**Parameters**: The parameters of this function.
-· array: T[]: The source array from which the value will be removed. It is a generic array, meaning it can contain elements of any type.
-· value: T: The value to be removed from the array. Its type must match the element type of the array.
-**Code Description**: This is a generic function designed to operate on an array of any type `T`. It takes an array and a value as input. The function first uses the `indexOf` method to find the index of the first occurrence of the specified `value` within the `array`. If the `value` is found (meaning the returned index is not -1), the function then calls the `splice` method on the array. The `splice(index, 1)` call removes one element at the found index, thereby modifying the original array in place. Finally, the function returns the array. If the specified `value` is not found in the array, no changes are made, and the original array is returned.
-**Note**: This function mutates the original array passed as the `array` argument. If the array contains multiple instances of the same value, only the first one encountered will be removed.
-**Return Value**: The function returns the modified input `array`. If the value was not found in the array, it returns the original, unmodified array.
+**add_document**: The function of add_document is to add a single document to the knowledge base.
+**Parameters**: The parameters of this method.
+· document: A `Document` object to be added to the knowledge base.
+**Code Description**: This method is responsible for incorporating a new document into the vector store managed by the `KnowledgeBase`. The process begins with a check to determine if the internal vector store, `self.vector_store`, has been initialized. If the vector store is `None`, it signifies that this is the first document being added to the knowledge base. In this case, the method calls the private helper method `_initialize_vector_store`, passing the new document within a list to create and configure the vector store. If the `vector_store` already exists, the method simply adds the new document to the existing store by calling the `add_documents` method of the `vector_store` instance.
+**Note**: The vector store is initialized lazily. It is only created upon the addition of the first document, either through this method or the `add_documents` method.
