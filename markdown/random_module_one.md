@@ -1,46 +1,31 @@
 ## FunctionDef num(a, b)
-**FGDSpringDamper**: This component simulates a spring-damper system, applying forces to a Rigidbody to attract it towards a specified target position.
-**Attributes**: The attributes of this component.
-· Target: A `Transform` representing the destination point that the spring will pull the object towards.
-· Strength: A `float` value that determines the stiffness or strength of the spring. Higher values result in a stronger pull towards the target.
-· Damping: A `float` value that determines the amount of damping applied to the spring's motion. Damping reduces oscillation and helps the object settle at the target position.
-**Code Description**: This script must be attached to a `GameObject` that has a `Rigidbody` component. During the `Awake` phase, the script retrieves and stores a reference to the `Rigidbody` component for later use. If no `Rigidbody` is found, a warning is logged to the console.
+num: The function of num is to add two numbers.
+parameters: The parameters of this Function.
+· a
+· b
+Code Description: The function `num` takes two arguments, `a` and `b`, and returns their sum.
+Note: The function assumes that the arguments `a` and `b` support the addition operation.
 
-The core logic resides in the `FixedUpdate` method, which is executed at a fixed time interval, making it suitable for physics calculations. In each `FixedUpdate` call, the script first checks if the `Target` transform has been assigned. If a `Target` exists, it calculates two forces: a spring force and a damping force.
-
-The spring force is calculated based on the displacement vector between the object's current position and the `Target`'s position, multiplied by the `Strength` property. This force pulls the object directly towards the target, acting like a spring.
-
-The damping force is calculated by multiplying the object's current velocity by the `Damping` property and then negating the result. This force opposes the object's motion, slowing it down and preventing it from oscillating endlessly around the target.
-
-Finally, the script applies the sum of the spring force and the damping force to the `Rigidbody` using the `AddForce` method. This results in a smooth, physically-based movement towards the target, mimicking the behavior of a real-world spring-damper system.
-**Note**: This component will not function without a `Rigidbody` component attached to the same `GameObject`. The `Strength` and `Damping` values should be carefully tuned to achieve the desired behavior. Setting `Strength` too high or `Damping` too low can lead to unstable or overly bouncy motion. The physics calculations are performed in `FixedUpdate` to ensure frame rate independence and stability.
 ## FunctionDef generate_random_integers(count, start, end)
-**useFormLayout**: This is a custom React hook for accessing the form layout context.
-**Code Description**: The `useFormLayout` hook is designed to retrieve the current layout configuration from the `FormLayoutContext`. Internally, it is a simple wrapper around the standard React `useContext` hook, to which it passes the `FormLayoutContext`. This allows any component within the component tree wrapped by `FormLayoutContext.Provider` to easily access shared layout properties, such as label alignment, column widths, and layout direction. By using this hook, components can reactively update when the form layout context changes, ensuring a consistent and centralized approach to form styling.
-**Note**: This hook must be used within a component that is a descendant of the `FormLayoutContext.Provider`. If it is used outside of such a provider, it will return the default value that `FormLayoutContext` was created with.
-**Return**: It returns the current context value of `FormLayoutContext`. This value is an object that contains the properties defining the layout of form components, which may include settings like `labelCol`, `wrapperCol`, `layout`, `colon`, etc.
+generate_random_integers: The function of generate_random_integers is to return a list of pseudo-random integers within a specified range and count.
+parameters: The parameters of this Function.
+· count: Number of integers to generate.
+· start: Inclusive lower bound for values.
+· end: Inclusive upper bound for values.
+Code Description: The function `generate_random_integers` takes an integer `count` specifying the number of random integers to generate, and optional integer arguments `start` and `end` which define the inclusive range for the random numbers. If `count` is negative, a ValueError is raised. If `start` is greater than `end`, their values are swapped to ensure `start` is the lower bound. The function then uses a list comprehension with `random.randint(start, end)` to generate a list of `count` random integers, each sampled uniformly from the range [`start`, `end`]. The generated list is then returned.
+Note: The `start` and `end` parameters have default values of 0 and 100 respectively. The function handles the case where `start` is greater than `end` by swapping the values. A ValueError is raised if `count` is negative.
+END DOCUMENTATION FOR: generate_random_integers
 ## FunctionDef choose_random_item(items)
-**make_sparse_from_indices_and_values**: **Constructs a TFF computation that builds a `tf.SparseTensor` from its component computations.**
-**Parameters**: The parameters of this function.
-· indices: A `tff.Computation` that returns the indices of the sparse tensor. This computation must yield a `tf.int64` tensor of shape `[N, D]`, where `N` is the number of non-zero elements and `D` is the rank of the tensor.
-· values: A `tff.Computation` that returns the non-zero values of the sparse tensor. This computation must yield a tensor of shape `[N]`, where `N` is the number of non-zero elements. The data type of this tensor determines the data type of the resulting sparse tensor.
-· dense_shape: A `tff.Computation` that returns the shape of the equivalent dense tensor. This computation must yield a `tf.int64` tensor of shape `[D]`, where `D` is the rank of the tensor.
-**Code Description**: This function is a helper utility for creating a representation of a `tf.SparseTensor` within the TFF framework. It takes three separate `tff.Computation` objects as input: one for the `indices`, one for the `values`, and one for the `dense_shape`. These are the three components required to define a sparse tensor. The function then uses `computation_impl.ConcreteComputation.from_tensorflow` to wrap underlying TensorFlow logic for sparse tensor construction into a new, single `tff.Computation`. It programmatically defines the function signature for this new computation, specifying that it accepts the results of the input computations as parameters. Finally, it invokes the newly created computation with the provided `indices`, `values`, and `dense_shape` computations, composing them into one computation that produces the sparse tensor.
-**Returns**: A `tff.Computation` that, when executed, returns a `tff.Value` representing the constructed `tf.SparseTensor`.
+choose_random_item: The function of choose_random_item is to choose a single random item from a list of strings.
+parameters: The parameters of this Function.
+· items: A list of strings to choose from.
+Code Description: The function `choose_random_item` takes a list of strings `items` as input. It first checks if the list is empty. If the list is empty, it raises a ValueError with the message "items must not be empty". Otherwise, it uses the `random.choice` function to select a random element from the list and returns it.
+Note: The function raises a ValueError if the input list is empty, ensuring that it only operates on non-empty lists.
+END DOCUMENTATION FOR: choose_random_item
 ## FunctionDef shuffle_copy(items)
-**sort**: Sorts a DataFrame based on the given column(s) and sort orders.
-
-**Parameters**:
-· df (DataFrame): The input DataFrame that needs to be sorted.
-· cols (List[Union[str, bool]]): A list containing column names as strings, where each name can be optionally followed by a boolean to specify the sort order. `True` indicates ascending order, and `False` indicates descending order. If a boolean is not provided after a column name, the sort order defaults to ascending.
-
-**Code Description**:
-This function sorts a DataFrame by applying an `ORDER BY` clause to the underlying SQL query. The implementation is recursive, processing one column at a time from the `cols` list. For each column, it checks if the next element in the list is a boolean to determine the sort direction. If no boolean is specified, the default order is ascending.
-
-A nested helper function, `sort_by_col`, is responsible for sorting by a single column. It constructs the appropriate `ORDER BY` SQL clause, adding a `DESC` keyword if the order is descending. This clause is then applied to the DataFrame's query via the `_apply_query` method, which generates a new DataFrame. The main `sort` function then calls itself with this new DataFrame and the remaining columns to be sorted. This process continues until all specified columns have been processed, resulting in a fully sorted DataFrame.
-
-**Note**:
-This is an eager transformation, not a lazy one. Calling this function immediately triggers a new job on BigQuery and will create a new table behind the scenes to store the sorted results. This is different from lazy transformations, which only modify the query plan without executing it.
-
-**Returns**:
-A new DataFrame sorted by the specified column(s).
+shuffle_copy: The function of shuffle_copy is to return a shuffled copy of the input list of integers without modifying the original list.
+parameters: The parameters of this Function.
+· items: A list of integers.
+Code Description: The function `shuffle_copy` takes a list of integers `items` as input. It creates a copy of the input list using `list(items)`. Then, it shuffles the elements of the copied list randomly using `random.shuffle(copy)`. Finally, it returns the shuffled copy.
+Note: The function ensures that the original list remains unchanged by operating on a copy. The function relies on the `random` module to perform the shuffling, which must be imported separately.
+END DOCUMENTATION FOR: shuffle_copy
