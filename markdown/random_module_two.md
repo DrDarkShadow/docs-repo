@@ -3,7 +3,7 @@
 
 ## Overview
 
-The `count_vowels` function calculates the total number of vowels within a given input string in a case-insensitive manner.
+The `count_vowels` function counts the total number of vowels within a given string in a case-insensitive manner.
 
 ## parameters
 
@@ -11,27 +11,27 @@ The `count_vowels` function calculates the total number of vowels within a given
 
 ## Description
 
-This function provides a straightforward way to count vowel occurrences in a string. The core logic is executed in two main steps:
+This function provides a simple and efficient way to determine the vowel count in any given text.
 
-1.  A `set` named `vowels` is initialized with all lowercase and uppercase English vowels (`"aeiouAEIOU"`). Using a `set` allows for very fast membership checking, which is more efficient than searching through a list or string repeatedly.
+The core logic begins by defining a `set` named `vowels` which contains all English vowels in both lowercase (`a, e, i, o, u`) and uppercase (`A, E, I, O, U`). Using a set allows for highly efficient membership testing, which is faster than searching through a list or string repeatedly.
 
-2.  The function then uses a generator expression, `(1 for ch in text if ch in vowels)`, to iterate through each character (`ch`) of the input `text`. For every character that is found within the `vowels` set, the number `1` is generated.
+The function then iterates through each character (`ch`) in the input `text`. For each character, it checks if the character is present in the `vowels` set. A generator expression, `(1 for ch in text if ch in vowels)`, yields a `1` for every character that is a vowel.
 
-Finally, the built-in `sum()` function is called on this generator. It consumes all the generated `1`s and adds them together, producing the total count of vowels, which is then returned as an integer.
+Finally, the built-in `sum()` function is used to tally all the `1`s generated, producing the total count of vowels in the string.
 
 ```python
 # Internal logic breakdown
 vowels = set("aeiouAEIOU")
-# For an input "Test", the generator would yield 1 for 'e'.
-# sum() would then calculate the total, returning 1.
+# For a text "Hello", the generator would yield 1 for 'e' and 1 for 'o'.
+# sum() would then calculate 1 + 1 = 2.
 return sum(1 for ch in text if ch in vowels)
 ```
 
 ## Usage Notes
 
-- The function is case-insensitive because the `vowels` set contains both `aeiou` and `AEIOU`.
-- Only the standard English vowels (a, e, i, o, u) are counted. Vowels with accents or from other alphabets (e.g., 'á', 'ü', 'ø') will not be counted.
-- Any non-vowel characters, including consonants, numbers, whitespace, and symbols, are ignored.
+- The function is case-insensitive. It will count both 'a' and 'A' as vowels.
+- Only the characters 'a', 'e', 'i', 'o', 'u' (and their uppercase equivalents) are considered vowels. The character 'y' is not included.
+- Non-alphabetic characters, such as numbers, punctuation, and whitespace, are ignored and do not contribute to the count.
 
 **Output Example**: The function returns an integer representing the total count of vowels.
 ```
@@ -42,16 +42,16 @@ return sum(1 for ch in text if ch in vowels)
 
 ```python
 # Example usage
-input_string = "This is a Simple Test String 123!"
-vowel_count = count_vowels(input_string)
-print(f"The text is: '{input_string}'")
+input_sentence = "Hello World! This is a Test."
+vowel_count = count_vowels(input_sentence)
+print(f"The input string is: '{input_sentence}'")
 print(f"The number of vowels is: {vowel_count}")
 ```
 
 **Output:**
 
 ```
-The text is: 'This is a Simple Test String 123!'
+The input string is: 'Hello World! This is a Test.'
 The number of vowels is: 7
 ```
 
@@ -61,72 +61,64 @@ The number of vowels is: 7
 
 ## Overview
 
-The `pairwise_sum` function computes the sum of an iterable of numbers using the Kahan summation algorithm, which provides a more numerically stable and precise result compared to a naive summation, especially for floating-point numbers.
+The `pairwise_sum` function computes the arithmetic sum of a sequence of numbers using a numerically stable algorithm to minimize floating-point errors.
 
 ## parameters
 
-- `numbers` (Iterable[float]): An iterable collection of numbers (floats or integers) that need to be summed. This can be a list, tuple, or any other iterable object.
+- `numbers`: `Iterable[float]` - An iterable collection of numbers (e.g., a list, tuple, or generator) to be summed. The elements can be floats or integers, as they will be cast to floats internally.
 
 ## Description
 
-This function provides a robust method for summing floating-point numbers by minimizing rounding errors that can accumulate during computation. Standard summation can lose precision, particularly when adding a very small number to a very large one. This function implements the Kahan summation algorithm to counteract this effect.
-
-The algorithm works by maintaining a running `compensation` variable that accumulates the error from each addition.
+This function provides a high-precision method for summing floating-point numbers by implementing the Kahan summation algorithm. Standard summation can suffer from a loss of precision when adding a very small number to a very large number, as the lower-order bits of the small number are lost. The Kahan algorithm mitigates this issue by tracking a running `compensation` for the accumulated error.
 
 The logic proceeds as follows:
-1.  Initialize `total` and `compensation` to `0.0`.
-2.  Iterate through each `value` in the input `numbers`.
-3.  For each `value`, it is first cast to a `float`.
-4.  The `compensation` from the previous step is subtracted from the current `value` to create a corrected value `y`. This reintroduces the "lost" part from the prior addition.
-    `y = float(value) - compensation`
-5.  The corrected value `y` is added to the running `total`. Due to floating-point limitations, this addition may still be imprecise.
-    `t = total + y`
-6.  The error from the addition in the previous step is calculated and stored in `compensation`. This is done by observing the difference between the result `t` and the original `total`, and then subtracting `y`. If the addition were perfect, this would be zero.
-    `compensation = (t - total) - y`
-7.  The `total` is updated with the new sum `t`.
-8.  After iterating through all numbers, the final, more accurate `total` is returned.
+1.  Two floating-point variables, `total` and `compensation`, are initialized to `0.0`. `total` holds the running sum, and `compensation` tracks the accumulated round-off error.
+2.  The function iterates through each `value` in the input `numbers`.
+3.  For each `value`, it is first corrected by subtracting the `compensation` from the previous iteration. This corrected value is stored in `y`.
+4.  The corrected value `y` is added to the running `total`, and the result is stored in a temporary variable `t`.
+5.  Due to the finite precision of floating-point arithmetic, the addition `total + y` might lose some low-order bits. The new `compensation` is calculated as `(t - total) - y`. This expression captures the round-off error from the summation.
+6.  The `total` is updated to `t`.
+7.  This process repeats for all numbers, with each step correcting for the error of the last. The final `total` is returned, providing a more accurate sum than a naive approach.
 
 ```python
-# Inside the loop
+# Inside the loop for each value
 y = float(value) - compensation
 t = total + y
 compensation = (t - total) - y
 total = t
 ```
 
-This process ensures that the low-order bits, which are often lost in standard floating-point addition, are carried over to the next iteration, leading to a final sum with higher precision.
-
 ## Usage Notes
 
-- This function is highly recommended when accuracy is critical and the dataset involves summing a large quantity of floating-point numbers or numbers with a wide range of magnitudes.
-- While Python's built-in `sum()` function is often sufficient, `pairwise_sum` provides an explicit and reliable implementation of a high-precision summation algorithm.
-- Any integers provided in the input `numbers` iterable will be automatically converted to floats during the calculation.
+- This function is more accurate than Python's built-in `sum()` for floating-point numbers, especially when the input contains values with widely different magnitudes.
+- The input iterable can contain both integers and floats; integers will be automatically cast to floats during the computation.
+- It is particularly useful in scientific and financial calculations where precision is critical.
 
-**Output Example**: The function returns a single floating-point number.
+**Output Example**: A single floating-point number representing the sum.
 ```
-51.000000123
+10000000007.0
 ```
 
 ## Example
 
 ```python
-# Example usage
-# A list containing numbers of vastly different magnitudes
-data = [150000.75, 0.000000123, 50.25, -150000.0]
-result = pairwise_sum(data)
+# Example usage with numbers of vastly different magnitudes
+# A naive sum might result in 7.0 due to precision loss
+numbers_list = [1e10, 1, 2, -1e10, 4]
+result = pairwise_sum(numbers_list)
 print(result)
 
-# Another example with a generator
-data_generator = (i * 0.1 for i in range(10))
-result_from_generator = pairwise_sum(data_generator)
-print(result_from_generator)
+# Example with a simple list of floats
+more_numbers = [0.1, 0.2, 0.3, 0.4, 0.5]
+result_simple = pairwise_sum(more_numbers)
+print(result_simple)
 ```
 
 **Output:**
 
 ```
-51.000000123
-4.5
+7.0
+1.5
 ```
 
 ***
@@ -135,77 +127,78 @@ print(result_from_generator)
 
 ## Overview
 
-The `split_into_chunks` function divides a given string into a series of smaller, fixed-size substrings.
+The `split_into_chunks` function divides a given string into a series of smaller, fixed-length substrings.
 
 ## parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `text` | str | The input string that will be divided into chunks. |
-| `size` | int | The desired length for each chunk. This value must be a positive integer. |
+| `text` | `str` | The input string that needs to be divided into chunks. |
+| `size` | `int` | The desired length for each chunk. This value must be a positive integer. |
 
 ## Description
 
 This function provides a straightforward way to segment a string into multiple parts of a specified length.
 
-The function first validates the `size` parameter. If `size` is less than or equal to zero, it is not a valid length for a chunk, so the function raises a `ValueError`.
+The function first validates the `size` parameter. If `size` is less than or equal to zero, it raises a `ValueError`, as chunking into non-positive lengths is not a valid operation.
 
-If the `size` is valid, the function proceeds to slice the string. It uses a generator expression within a `tuple()` constructor for efficiency. The `range(0, len(text), size)` function generates the starting indices for each chunk. For each index `i`, a slice `text[i : i + size]` is created. This slice starts at index `i` and extends up to, but not including, index `i + size`.
+If the `size` is valid, the function proceeds to iterate through the input `text` using a generator expression. It generates a sequence of starting indices for the slices by using `range(0, len(text), size)`. For each starting index `i`, it extracts a substring slice `text[i : i + size]`. This process continues until the entire string has been covered.
 
-The resulting substrings are collected into a tuple, which is then returned. If the length of the input `text` is not a multiple of `size`, the final chunk in the tuple will be shorter than the specified `size`.
+The final chunk may be shorter than the specified `size` if the total length of the `text` is not perfectly divisible by `size`. All the generated string chunks are then collected into a tuple and returned.
 
 ```python
-# Internal logic for a text "abcdefg" and size 3
-# 1. Validate size: 3 > 0, so it's valid.
-# 2. Generate indices using range(0, 7, 3), which yields 0, 3, 6.
-# 3. For index 0: text[0:3] -> "abc"
-# 4. For index 3: text[3:6] -> "def"
-# 5. For index 6: text[6:9] -> "g" (slice automatically stops at the end of the string)
-# 6. Return the collected chunks as a tuple: ("abc", "def", "g")
+# The core logic uses a generator expression with range stepping
+tuple(text[i : i + size] for i in range(0, len(text), size))
 ```
 
 ## Usage Notes
 
-- The function will raise a `ValueError` if the `size` parameter is zero or a negative number.
-- The last element in the returned tuple may be shorter than `size` if the total length of the `text` is not evenly divisible by `size`.
-- If an empty string is passed as the `text` parameter, the function will return an empty tuple `()`.
-- The return type is always a `tuple` of strings.
+- The `size` parameter must be a positive integer. Providing `0` or a negative number will result in a `ValueError`.
+- The returned value is a `tuple` of strings. Tuples are immutable, meaning their contents cannot be changed after creation.
+- The last element in the returned tuple may have a length less than `size` if the input string's length is not a multiple of `size`.
 
-**Output Example**: A possible return value for a successful operation.
+**Output Example**: A possible return value for splitting `"abcdefg"` with a size of `3`.
 
 ```
-('This ', 'is a ', 'sampl', 'e.')
+('abc', 'def', 'g')
 ```
 
 ## Example
 
 ```python
-# Example usage
-long_string = "This is a sample string for demonstrating the chunking function."
-chunk_length = 10
+# Example 1: Splitting a string into chunks of size 5
+text_to_split = "This is a sample text to be split."
+chunk_size = 5
 
-# Split the string into chunks of 10 characters
-chunks = split_into_chunks(long_string, chunk_length)
-print(chunks)
+result = split_into_chunks(text_to_split, chunk_size)
+print(f"Original Text: '{text_to_split}'")
+print(f"Chunks of size {chunk_size}: {result}")
 
-# Example with a string length not divisible by chunk size
-short_string = "123456789"
-short_chunks = split_into_chunks(short_string, 4)
-print(short_chunks)
+# Example 2: The last chunk is shorter
+text_to_split_2 = "12345678"
+chunk_size_2 = 3
 
-# Example of invalid size
+result_2 = split_into_chunks(text_to_split_2, chunk_size_2)
+print(f"\nOriginal Text: '{text_to_split_2}'")
+print(f"Chunks of size {chunk_size_2}: {result_2}")
+
+# Example 3: Handling an invalid size
 try:
     split_into_chunks("some text", 0)
 except ValueError as e:
-    print(e)
+    print(f"\nError with invalid size: {e}")
 ```
 
 **Output:**
 
 ```
-('This is a ', 'sample str', 'ing for de', 'monstratin', 'g the chun', 'king funct', 'ion.')
-('1234', '5678', '9')
-size must be positive
+Original Text: 'This is a sample text to be split.'
+Chunks of size 5: ('This ', 'is a ', 'sampl', 'e tex', 't to ', 'be sp', 'lit.')
+
+Original Text: '12345678'
+Chunks of size 3: ('123', '456', '78')
+
+Error with invalid size: size must be positive
 ```
 
 ***
