@@ -1,68 +1,61 @@
 ## FunctionDef count_vowels(text)
-## Function count_vowels
-**count_vowels**: The function of count_vowels is to count the total number of vowels within a given string in a case-insensitive manner.
+## Function: count_vowels
+The function of **count_vowels** is to count and return the total number of vowels within a given input string in a case-insensitive manner.
 
 **parameters**: The parameters of this Function.
 · text: The input string to be scanned for vowels.
 
-**Code Description**: 
-The function initializes a `set` named `vowels` containing all lowercase and uppercase English vowels (a, e, i, o, u, A, E, I, O, U). It then iterates through each character (`ch`) of the input `text`. For each character, it checks if the character is present in the `vowels` set. A generator expression yields the number `1` for every character that is found in the set. Finally, the built-in `sum()` function calculates the total of all the generated `1`s, effectively counting the vowels, and returns this sum as an integer.
+**Code Description**:
+The function begins by defining a set named `vowels` which contains all lowercase and uppercase English vowels ('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'). It then uses a generator expression to iterate through each character (`ch`) in the input `text`. For each character, it checks if the character is present in the `vowels` set. If a character is a vowel, the generator yields the number `1`. Finally, the `sum()` function is used to add up all the `1`s produced by the generator, effectively counting the total number of vowels. This final count is returned as an integer.
 
-**Note**: 
-The check for vowels is case-insensitive because the `vowels` set explicitly includes both uppercase and lowercase letters. Using a set for vowel lookup is highly efficient.
+**Note**:
+The vowel check is case-insensitive because the `vowels` set explicitly includes both lowercase and uppercase letters. Any characters in the input `text` that are not vowels (including consonants, numbers, and symbols) are ignored.
 
-**Output Example**: 
+**Output Example**:
 ```python
-# Calling count_vowels("Hello World") returns:
+# Calling the function with the string "Hello World"
+count_vowels("Hello World")
+
+# The function returns the integer 3
 3
 ```
 ## FunctionDef pairwise_sum(numbers)
-## Function pairwise_sum
-**pairwise_sum**: The function of pairwise_sum is to compute the arithmetic sum of an iterable of numbers using the Kahan summation algorithm for improved numerical precision.
+## Function: pairwise_sum
+The function of **pairwise_sum** is to compute the arithmetic sum of an iterable of numbers using a numerically stable approach to improve precision.
 
 **parameters**: The parameters of this Function.
-· `numbers`: An iterable collection of floating-point or integer values to be summed.
+· `numbers`: An iterable containing float or integer values that will be summed.
 
 **Code Description**: 
-The function initializes two floating-point variables, `total` and `compensation`, to `0.0`. It then iterates through each `value` in the input `numbers` iterable.
+This function implements the Kahan summation algorithm to minimize floating-point errors. It initializes two floating-point variables, `total` and `compensation`, to `0.0`. The function then iterates through each `value` in the input `numbers` iterable.
 
-Inside the loop, for each value:
-1. A corrected value `y` is calculated by subtracting the current `compensation` from the input `value`. This step adjusts the current number by the error from the previous addition.
-2. A temporary sum `t` is computed by adding the corrected value `y` to the running `total`.
-3. The `compensation` variable is updated to capture the numerical error (the low-order bits) lost in the previous step. This is calculated as `(t - total) - y`.
-4. The main `total` is updated to the value of the temporary sum `t`.
+Inside the loop, it first calculates a corrected value `y` by subtracting the `compensation` from the current `value`. This `compensation` term holds the error from the previous iteration's addition. Next, it calculates a temporary sum `t` by adding the corrected value `y` to the running `total`. The new `compensation` value is then calculated by finding the difference `(t - total) - y`, which effectively captures the low-order bits (the error) lost in the `t = total + y` operation. Finally, the `total` is updated to the value of `t`.
 
-After the loop has processed all the numbers, the function returns the final `total`.
+After the loop has processed all values in the iterable, the function returns the final `total`.
 
 **Note**: 
-This function implements the Kahan summation algorithm, which is designed to minimize the accumulation of floating-point errors. It is more numerically stable than a simple `sum()` when dealing with a large set of numbers or numbers with widely varying magnitudes.
+This function is particularly useful for summing a large number of floating-point values where standard summation might accumulate significant precision errors. It provides a more accurate result than Python's built-in `sum()` for such cases.
 
 **Output Example**: 
 ```python
-# Calling the function with a list of floats
-result = pairwise_sum([100000000.0, 3.14159, -100000000.0])
-
-# The expected output would be approximately 3.14159
-# result: 3.14159
+# Calling pairwise_sum([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
+1.0
 ```
 ## FunctionDef split_into_chunks(text, size)
-## Function split_into_chunks
-**split_into_chunks**: The function of split_into_chunks is to divide a given string into a sequence of smaller, fixed-size substrings.
+## Function: split_into_chunks
+The function of **split_into_chunks** is to split a given string into a series of smaller, fixed-size substrings.
 
 **parameters**: The parameters of this Function.
-· `text` (str): The input string that will be divided into chunks.
-· `size` (int): The desired maximum length for each chunk. This value must be a positive integer.
+· `text`: The string to be split into chunks.
+· `size`: The integer length for each chunk. This value must be positive.
 
-**Code Description**: 
-The function first validates the `size` parameter. It checks if `size` is less than or equal to zero. If it is, the function raises a `ValueError` with the message "size must be positive" to prevent invalid operations.
+**Code Description**:
+The function first checks if the provided `size` parameter is less than or equal to zero. If it is, a `ValueError` is raised with the message "size must be positive". If `size` is a positive number, the function proceeds to slice the input `text`. It uses a generator expression that iterates from the start of the string to its end, with a step equal to `size`. In each step, it creates a substring of length `size` starting from the current index. These substrings are then collected into a tuple, which is returned. The last substring in the tuple may be shorter than `size` if the length of the original text is not a multiple of `size`.
 
-If `size` is a positive number, the function proceeds to split the `text`. It uses a generator expression within a `tuple()` constructor. The `range()` function generates a sequence of starting indices for each chunk, starting from 0, up to the length of the text, incrementing by `size` in each step. For each index `i` generated by the range, a slice of the `text` is taken from `i` to `i + size`. This creates a substring of length `size`. The final substring may be shorter if the total length of the text is not evenly divisible by `size`. All the generated substrings are collected into a tuple, which is then returned.
+**Note**:
+The function will raise a `ValueError` if the `size` argument is zero or a negative number. The last chunk in the returned tuple can be shorter than the specified `size`.
 
-**Note**: 
-The `size` parameter must be a positive integer; otherwise, a `ValueError` will be raised. The last element in the returned tuple may have a length less than the specified `size`.
-
-**Output Example**: 
+**Output Example**:
 ```python
-# Calling split_into_chunks("HelloWorld", 3) returns:
-('Hel', 'loW', 'orl', 'd')
+('sub', 'str', 'ing')
 ```
