@@ -2,44 +2,41 @@
 **fibonacci**: The function of fibonacci is to compute the nth Fibonacci number using an iterative approach.
 
 **parameters**: The parameters of this Function.
-· n: An integer representing the 0-indexed position in the Fibonacci sequence to be computed.
+· n: An integer representing the 0-indexed position of the desired Fibonacci number.
 
 **Code Description**:
-The function begins by checking if the input `n` is a negative number. If it is, a `ValueError` is raised with the message "n must be non-negative".
-Next, two variables, `a` and `b`, are initialized to 0 and 1, respectively. These represent the first two numbers in the Fibonacci sequence.
-The code then enters a `for` loop that iterates `n` times. In each iteration, the values of `a` and `b` are updated simultaneously: `a` takes the current value of `b`, and `b` takes the sum of the current `a` and `b`. This process effectively steps through the Fibonacci sequence.
-After the loop has completed `n` iterations, the variable `a` holds the nth Fibonacci number. The function concludes by returning the value of `a`.
+The function begins by checking if the input `n` is a negative number. If it is, a `ValueError` is raised. Two variables, `a` and `b`, are initialized to 0 and 1, respectively, which are the first two numbers in the Fibonacci sequence. The function then enters a `for` loop that iterates `n` times. In each iteration, the values of `a` and `b` are simultaneously updated: `a` takes the current value of `b`, and `b` is updated to the sum of the previous `a` and `b`. This process effectively generates the next number in the sequence. After the loop finishes, the function returns the final value of `a`, which represents the nth Fibonacci number.
 
 **Note**:
-The function is 0-indexed, meaning `fibonacci(0)` returns the first number in the sequence (0). It only accepts non-negative integers as input.
+The function calculates the sequence starting from a 0-based index, where `fibonacci(0)` is 0. It raises a `ValueError` for any negative input `n`. This iterative method is efficient in terms of memory usage compared to a recursive approach, especially for large values of `n`.
 
 **Output Example**:
-Calling `fibonacci(9)` returns `34`.
+Calling `fibonacci(8)` returns `21`.
 ## FunctionDef invert_dictionary(mapping)
-**invert_dictionary**: The function of invert_dictionary is to create a new dictionary by swapping the keys and values of an input dictionary, after validating that all values in the input are unique.
+**invert_dictionary**: The function of invert_dictionary is to create a new dictionary by swapping the keys and values of a given dictionary, after ensuring all values are unique.
 
 **parameters**: The parameters of this Function.
 · mapping: A dictionary with string keys and integer values, where all values are expected to be unique.
 
 **Code Description**:
-The function first validates the input dictionary `mapping` to ensure its values are unique. It does this by comparing the number of values in the dictionary (`len(mapping.values())`) with the number of unique values, which is determined by converting the values to a set and checking its length (`len(set(mapping.values()))`). If these two lengths are not equal, it signifies that there are duplicate values, and the function raises a `ValueError` with the message "Values must be unique to invert dictionary". If all values are unique, the function proceeds to create a new dictionary using a dictionary comprehension. It iterates through each key-value pair of the input `mapping` and constructs a new dictionary where the original value becomes the key and the original key becomes the value. This inverted dictionary is then returned.
+The function first validates the input dictionary `mapping`. It compares the number of values in the dictionary with the number of unique values by converting the values to a set. If the counts are not equal, it indicates that the original dictionary contains duplicate values, and the function raises a `ValueError` with the message "Values must be unique to invert dictionary". If all values are unique, the function proceeds to create a new dictionary using a dictionary comprehension. It iterates through each key-value pair of the input `mapping` and constructs the new dictionary by making each original value a key and each original key its corresponding value. This inverted dictionary is then returned.
 
 **Note**:
-This function will raise a `ValueError` if the input dictionary contains any duplicate values. The function relies on the values of the input dictionary being hashable, as they become the keys in the new dictionary.
+This function will raise a `ValueError` if the input dictionary contains duplicate values, as a dictionary cannot have duplicate keys, which the values would become after inversion.
 
 **Output Example**:
-If `mapping` is `{'apple': 1, 'banana': 2, 'cherry': 3}`, the function will return `{1: 'apple', 2: 'banana', 3: 'cherry'}`.
+If `mapping` is `{'apple': 1, 'banana': 2}`, the function returns `{1: 'apple', 2: 'banana'}`.
 ## FunctionDef is_palindrome(text)
-**is_palindrome**: The function of is_palindrome is to determine if a given string is a palindrome by comparing a normalized version of the string with its reverse.
+**is_palindrome**: The function of is_palindrome is to determine if a given string is a palindrome by ignoring character casing and spaces.
 
 **parameters**: The parameters of this Function.
 · text: The string to check for palindrome properties.
 
 **Code Description**:
-The function first initializes a new string variable named `normalized`. This string is constructed by iterating through each character (`ch`) of the input `text`. For each character, it checks if the character is a whitespace character using `ch.isspace()`. If it is not a space, the character is converted to lowercase and included in the new `normalized` string. The `''.join()` method assembles these filtered and lowercased characters. Finally, the function returns the result of comparing the `normalized` string with its reversed version, which is created using slice notation `[::-1]`.
+The function first creates a "normalized" version of the input `text`. It does this by iterating through each character of the `text` string. For every character that is not a whitespace character (as determined by `ch.isspace()`), it converts the character to lowercase and includes it in a new string called `normalized`. After processing all characters, the function compares the `normalized` string with its reversed version, which is created using the slice notation `[::-1]`. The function returns `True` if the normalized string is identical to its reverse, and `False` otherwise.
 
 **Note**:
-This function specifically ignores character casing and whitespace. Any other characters, including punctuation and numbers, will be included in the comparison.
+This function is case-insensitive and ignores all whitespace characters, including spaces, tabs, and newlines, when performing the palindrome check.
 
 **Output Example**:
 Calling `is_palindrome("Taco cat")` returns `True`.
