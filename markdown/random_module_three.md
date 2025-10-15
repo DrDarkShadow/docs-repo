@@ -11,61 +11,53 @@ The `fibonacci` function computes the nth number in the Fibonacci sequence using
 
 ## Description
 
-This function calculates a Fibonacci number based on its index `n`. The Fibonacci sequence starts with 0 and 1, and each subsequent number is the sum of the two preceding ones (0, 1, 1, 2, 3, 5, ...).
+This function calculates the nth Fibonacci number, where the sequence starts with 0 and 1.
 
-The function begins by validating the input. If `n` is a negative number, it raises a `ValueError` because the Fibonacci sequence is not defined for negative indices.
+The function first validates the input `n`. If `n` is a negative number, it raises a `ValueError` because the Fibonacci sequence is not defined for negative indices.
 
-It initializes two variables, `a` and `b`, to `0` and `1` respectively. These represent the first two numbers in the sequence, F₀ and F₁.
+It initializes two variables, `a` and `b`, to `0` and `1` respectively. These represent the first two numbers in the sequence (F₀ and F₁).
 
-The core logic resides in a `for` loop that iterates `n` times. In each iteration, the values of `a` and `b` are updated to advance to the next number in the sequence. The current value of `b` is assigned to `a`, and the sum of the old `a` and `b` is assigned to the new `b`. This is achieved with the tuple assignment `a, b = b, a + b`.
+The function then enters a `for` loop that iterates `n` times. In each iteration, the values of `a` and `b` are updated simultaneously using tuple assignment: `a, b = b, a + b`. This operation effectively shifts the sequence forward: the new `a` becomes the old `b`, and the new `b` becomes the sum of the old `a` and `b`.
 
-After the loop completes, the variable `a` holds the value of the nth Fibonacci number, which is then returned.
+After the loop completes, the variable `a` holds the nth Fibonacci number, which is then returned. For an input of `n=0`, the loop does not execute, and the initial value of `a` (0) is correctly returned.
 
-For example, if `n` is 3:
-1. Initialize `a = 0`, `b = 1`.
-2. Loop 1: `a` becomes `1`, `b` becomes `0 + 1 = 1`.
-3. Loop 2: `a` becomes `1`, `b` becomes `1 + 1 = 2`.
-4. Loop 3: `a` becomes `2`, `b` becomes `1 + 2 = 3`.
-5. The loop finishes, and the function returns the final value of `a`, which is `2`.
+```python
+# Initialization
+a, b = 0, 1
+
+# For n = 3, the loop runs 3 times:
+# 1. a becomes 1, b becomes 0 + 1 = 1
+# 2. a becomes 1, b becomes 1 + 1 = 2
+# 3. a becomes 2, b becomes 1 + 2 = 3
+
+# The function returns a, which is 2.
+# The sequence is 0, 1, 1, 2. The 3rd element (0-indexed) is 2.
+```
 
 ## Usage Notes
 
-- The input `n` must be a non-negative integer. Providing a negative value will result in a `ValueError`.
-- The function is 0-indexed, meaning `fibonacci(0)` returns the first element, `0`.
-- This iterative implementation is efficient in terms of memory usage and is suitable for calculating large Fibonacci numbers without risking stack overflow errors that can occur with naive recursive solutions.
+- The input `n` must be a non-negative integer. Providing a negative integer will result in a `ValueError`.
+- The function uses a 0-indexed sequence. For example, `fibonacci(0)` returns the first number (0), and `fibonacci(1)` returns the second number (1).
+- This iterative implementation is efficient in terms of memory and performance compared to a naive recursive approach, as it avoids redundant calculations and deep recursion stacks.
 
 **Output Example**: The function returns a single integer value.
 ```
-34
+55
 ```
 
 ## Example
 
 ```python
-# Example usage of the fibonacci function
-# Calculate the 9th Fibonacci number (0-indexed)
-n_index = 9
-result = fibonacci(n_index)
-print(f"The Fibonacci number at index {n_index} is: {result}")
-
-# Example with an edge case
-n_index_zero = 0
-result_zero = fibonacci(n_index_zero)
-print(f"The Fibonacci number at index {n_index_zero} is: {result_zero}")
-
-# Example that would raise an error
-try:
-    fibonacci(-1)
-except ValueError as e:
-    print(f"Error caught as expected: {e}")
+# Example usage
+# Calculate the 10th Fibonacci number (0-indexed)
+result = fibonacci(10)
+print(result)
 ```
 
 **Output:**
 
 ```
-The Fibonacci number at index 9 is: 34
-The Fibonacci number at index 0 is: 0
-Error caught as expected: n must be non-negative
+55
 ```
 
 ***
@@ -74,53 +66,44 @@ Error caught as expected: n must be non-negative
 
 ## Overview
 
-The `invert_dictionary` function inverts a given dictionary by swapping its keys and values, returning a new dictionary.
+The `invert_dictionary` function inverts a given dictionary by swapping its keys and values, creating a new dictionary where the original values become the keys and the original keys become the values.
 
 ## parameters
 
-- **`mapping`** (Dict[str, int]): A dictionary with string keys and integer values. The values in this dictionary must be unique to allow for a valid inversion.
+- **`mapping`** `Dict[str, int]`: A dictionary mapping string keys to integer values. It is essential that all values in this dictionary are unique for the inversion to be possible.
 
 ## Description
 
-This function provides a safe way to invert a dictionary mapping strings to integers.
+This function provides a safe way to invert a dictionary. The core logic involves two main steps:
 
-The function first performs a crucial validation step. It checks if all the values in the input `mapping` dictionary are unique. This is accomplished by comparing the number of values (`len(mapping.values())`) with the number of unique values (`len(set(mapping.values()))`). If these counts do not match, it indicates the presence of duplicate values, which would lead to data loss upon inversion (as multiple original keys would map to the same new key). In this case, the function raises a `ValueError` with a descriptive message.
+1.  **Uniqueness Validation**: Before performing the inversion, the function first validates that all values in the input `mapping` dictionary are unique. It does this by comparing the number of values (`len(mapping.values())`) with the number of unique values (`len(set(mapping.values()))`). If these counts are not equal, it indicates the presence of duplicate values, which would lead to data loss during inversion (as dictionary keys must be unique). In this case, a `ValueError` is raised with the message "Values must be unique to invert dictionary".
 
-If all values are unique, the function proceeds to create and return a new dictionary. It uses a dictionary comprehension, `{value: key for key, value in mapping.items()}`, to iterate through each key-value pair of the original `mapping`. For each pair, it constructs a new entry where the original `value` becomes the new key and the original `key` becomes the new value.
+2.  **Inversion**: If the values are unique, the function proceeds to invert the dictionary. It uses a dictionary comprehension, `{value: key for key, value in mapping.items()}`, to iterate through each key-value pair of the original `mapping`. For each pair, it creates a new entry in the returned dictionary where the original `value` is the new key and the original `key` is the new value.
 
 ```python
-# The core logic for inversion after validation
-# {value: key for key, value in mapping.items()}
+# Internal logic for inversion
+# This is executed only if values are unique
+inverted = {value: key for key, value in mapping.items()}
 ```
 
 ## Usage Notes
 
-- The primary requirement for this function is that all values in the input `mapping` dictionary must be unique. If they are not, the function will raise a `ValueError`.
-- The function is non-destructive; it does not modify the original dictionary. It returns a completely new dictionary instance.
-- The key-value types are swapped. An input of `Dict[str, int]` will produce an output of `Dict[int, str]`.
+- The most critical requirement for this function is that the values of the input dictionary must be unique. The function will raise a `ValueError` if any duplicate values are found.
+- The input dictionary is expected to have string keys and integer values, and the output will be a dictionary with integer keys and string values, as per the type hints.
 
-**Output Example**: A dictionary with integer keys and string values.
-```json
-{
-  1: "one",
-  2: "two",
-  3: "three"
-}
-```
+**Output Example**: A new dictionary with keys and values swapped.
 
 ## Example
 
 ```python
-# Example 1: Successful inversion with a valid dictionary
+# Example usage with a valid dictionary
 valid_mapping = {'user_one': 101, 'user_two': 102, 'user_three': 103}
 inverted_mapping = invert_dictionary(valid_mapping)
-print(f"Original: {valid_mapping}")
-print(f"Inverted: {inverted_mapping}")
+print(inverted_mapping)
 
-# Example 2: Attempting to invert a dictionary with duplicate values
-invalid_mapping = {'alpha': 1, 'beta': 2, 'gamma': 1}
-print(f"\nAttempting to invert: {invalid_mapping}")
+# Example of an invalid dictionary that will raise an error
 try:
+    invalid_mapping = {'apple': 5, 'banana': 10, 'cherry': 5}
     invert_dictionary(invalid_mapping)
 except ValueError as e:
     print(f"Error: {e}")
@@ -129,10 +112,7 @@ except ValueError as e:
 **Output:**
 
 ```
-Original: {'user_one': 101, 'user_two': 102, 'user_three': 103}
-Inverted: {101: 'user_one', 102: 'user_two', 103: 'user_three'}
-
-Attempting to invert: {'alpha': 1, 'beta': 2, 'gamma': 1}
+{101: 'user_one', 102: 'user_two', 103: 'user_three'}
 Error: Values must be unique to invert dictionary
 ```
 
@@ -142,67 +122,61 @@ Error: Values must be unique to invert dictionary
 
 ## Overview
 
-The `is_palindrome` function checks if a given string is a palindrome, ignoring letter casing and whitespace.
+The `is_palindrome` function checks if a given string is a palindrome, meaning it reads the same forwards and backwards, after ignoring character casing and spaces.
 
 ## parameters
 
-- `text` (str): The string to be evaluated.
+- **`text`** (`str`): The string that will be checked to determine if it is a palindrome.
 
 ## Description
 
-This function determines if a string reads the same forwards and backwards by first normalizing the input `text`.
+This function determines if a string is a palindrome through a two-step process: normalization and comparison.
 
-The normalization process involves creating a new string, `normalized`, by iterating through each character (`ch`) of the input `text`. For each character, it is converted to lowercase using `ch.lower()`, and any character that is a whitespace (checked with `ch.isspace()`) is excluded. The resulting filtered and lowercased characters are joined together into the `normalized` string.
+First, the function normalizes the input `text`. It iterates through each character of the string. For each character, it discards any whitespace (like spaces, tabs, or newlines) using `ch.isspace()` and converts the remaining characters to lowercase using `ch.lower()`. These processed characters are then joined together to form a new, clean string stored in the `normalized` variable.
 
-Finally, the function compares the `normalized` string to its reverse. The reversal is achieved using Python's slice notation `normalized[::-1]`. If the `normalized` string is identical to its reversed version, the function returns `True`; otherwise, it returns `False`.
+For example, an input of `"Taco Cat"` would be transformed into `"tacocat"`.
 
 ```python
-# Internal logic for normalization
-text = "Taco Cat"
 normalized = ''.join(ch.lower() for ch in text if not ch.isspace())
-# normalized becomes "tacocat"
+```
 
-# Internal logic for comparison
-# "tacocat" == "tacocat"[::-1] -> "tacocat" == "tacocat" -> True
+Second, the function compares the `normalized` string with its reverse. The reversal is achieved using Python's slice notation `[::-1]`. If the `normalized` string is identical to `normalized[::-1]`, the expression evaluates to `True`, indicating the original text is a palindrome. Otherwise, it evaluates to `False`. This boolean result is then returned.
+
+```python
 return normalized == normalized[::-1]
 ```
 
 ## Usage Notes
 
-- The comparison is case-insensitive. For example, "Madam" and "madam" are treated identically.
-- All whitespace characters (spaces, tabs, newlines) are removed before the check. For example, "taco cat" is evaluated as "tacocat".
-- Punctuation and symbols are **not** ignored and will be included in the palindrome check. For instance, "A man, a plan..." will return `False` because the punctuation breaks the symmetry.
+- **Case-Insensitive**: The comparison ignores the original casing of the letters. For example, `is_palindrome("Racecar")` and `is_palindrome("racecar")` both return `True`.
+- **Whitespace Removal**: All whitespace characters are removed from the string before the check is performed.
+- **Punctuation and Numbers**: The function does not remove punctuation or numbers. A string like `"madam, I'm Adam"` will be normalized to `"madam,i'madam"`, which is not a palindrome, and the function will correctly return `False`.
 
-**Output Example**: A boolean value indicating the result.
-```
-True
-```
+**Output Example**:
+For an input of `"No lemon no melon"`, the internal `normalized` string becomes `"nolemonnomelon"`. The function then compares this to its reverse, which is also `"nolemonnomelon"`, and returns `True`.
 
 ## Example
 
 ```python
-# Example 1: A classic palindrome phrase with mixed casing and spaces
-phrase = "A man a plan a canal Panama"
-result = is_palindrome(phrase)
-print(f"Is '{phrase}' a palindrome? {result}")
+# Example 1: A classic palindrome with mixed case and spaces
+result1 = is_palindrome("A man a plan a canal Panama")
+print(f"'A man a plan a canal Panama' is a palindrome: {result1}")
 
-# Example 2: A simple non-palindrome word
-word = "hello"
-result_false = is_palindrome(word)
-print(f"Is '{word}' a palindrome? {result_false}")
+# Example 2: A simple non-palindrome
+result2 = is_palindrome("Hello World")
+print(f"'Hello World' is a palindrome: {result2}")
 
-# Example 3: A word that is a palindrome but contains punctuation
-punctuated_phrase = "Eva, can I see bees in a cave?"
-result_punc = is_palindrome(punctuated_phrase)
-print(f"Is '{punctuated_phrase}' a palindrome? {result_punc}")
+# Example 3: A string that is not a palindrome due to punctuation
+result3 = is_palindrome("Eva, can I see bees in a cave?")
+print(f"'Eva, can I see bees in a cave?' is a palindrome: {result3}")
 ```
 
 **Output:**
 
 ```
-Is 'A man a plan a canal Panama' a palindrome? True
-Is 'hello' a palindrome? False
-Is 'Eva, can I see bees in a cave?' a palindrome? False
+'A man a plan a canal Panama' is a palindrome: True
+'Hello World' is a palindrome: False
+'Eva, can I see bees in a cave?' is a palindrome: False
 ```
 
 ***
