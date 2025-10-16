@@ -1,186 +1,156 @@
-## FunctionDef count_vowels(text)
-# Function: count_vowels(text: str)
+## FunctionDef choose_random_item(items)
+# Function: choose_random_item(items: List[str]) -> str
 
 ## Overview
 
-The `count_vowels` function counts the total number of vowels within a given input string in a case-insensitive manner.
+The `choose_random_item` function selects and returns a single string at random from a given non-empty list of strings.
 
 ## parameters
 
-- `text`: (str) The input string in which to count the vowels.
+- **`items`**: `List[str]` - A list of strings from which one item will be randomly selected. This list must not be empty.
 
 ## Description
 
-This function provides an efficient way to determine the number of vowels (a, e, i, o, u) in a string.
+This function provides a safe way to choose a random element from a list of strings. The core logic is built around Python's `random.choice()` method, which is designed to pick a single item uniformly at random from a non-empty sequence.
 
-The logic operates as follows:
-1.  A `set` named `vowels` is initialized with both lowercase and uppercase vowels: `set("aeiouAEIOU")`. Using a `set` allows for very fast membership checking (average O(1) time complexity).
-2.  The function then iterates through each character (`ch`) of the input `text` string.
-3.  A generator expression, `(1 for ch in text if ch in vowels)`, is used. For each character `ch` in the `text`, it checks if the character is present in the `vowels` set. If it is, the expression yields the number `1`.
-4.  The built-in `sum()` function is called on this generator. It consumes the generated `1`s and adds them together, producing a final integer total that represents the count of all vowels found.
-5.  This final sum is returned as the result.
+Before attempting to select an item, the function first performs a validation check: `if not items:`. This conditional statement verifies if the provided `items` list is empty. If it is, the function immediately raises a `ValueError` with the message "items must not be empty". This proactive error handling prevents the `IndexError` that `random.choice()` would otherwise raise and provides a more descriptive error to the developer.
 
-```python
-# Internal logic breakdown
-vowels = set("aeiouAEIOU")
-text = "Example"
-# The generator will yield 1 for 'E', 'a', and 'e'
-# sum() will calculate 1 + 1 + 1
-result = sum(1 for ch in text if ch in vowels)
-# result will be 3
-```
+If the list is not empty, the function proceeds to execute `return random.choice(items)`, which returns one of the strings from the list. Each string in the list has an equal probability of being chosen.
 
 ## Usage Notes
 
-- **Case-Insensitive**: The function is case-insensitive by design, as the `vowels` set contains both 'a' and 'A', 'e' and 'E', and so on.
-- **Non-Vowel Characters**: Any characters that are not vowels, including consonants, numbers, whitespace, and symbols, are ignored and not included in the count.
-- **Return Value**: The function always returns an integer (`int`). If no vowels are found or the input string is empty, it will return `0`.
+- The input list `items` cannot be empty. Providing an empty list will result in a `ValueError`.
+- This function depends on Python's `random` module. Ensure it is imported in the execution environment.
+- The selection is uniformly random, meaning every item in the list has an equal chance of being returned on each call.
 
-**Output Example**: The function returns a single integer representing the total count of vowels.
+**Output Example**: A single string from the input list. For an input of `['apple', 'banana', 'cherry']`, a possible output is `"banana"`.
 
 ## Example
 
+### Example 1: Choosing from a valid list
+
 ```python
+import random
+from typing import List
+
+# Definition of the function
+def choose_random_item(items: List[str]) -> str:
+    """Choose a single random item from a non-empty sequence."""
+    if not items:
+        raise ValueError("items must not be empty")
+    return random.choice(items)
+
 # Example usage
-input_string = "Hello World! This is a test."
-vowel_count = count_vowels(input_string)
-print(vowel_count)
+fruits = ["apple", "banana", "cherry", "date"]
+random_fruit = choose_random_item(fruits)
+print(f"A random fruit: {random_fruit}")
 ```
 
 **Output:**
 
 ```
-7
+A random fruit: cherry
+```
+*(Note: The actual output will be one of the items from the `fruits` list, chosen randomly.)*
+
+### Example 2: Attempting to choose from an empty list
+
+```python
+import random
+from typing import List
+
+# Definition of the function
+def choose_random_item(items: List[str]) -> str:
+    """Choose a single random item from a non-empty sequence."""
+    if not items:
+        raise ValueError("items must not be empty")
+    return random.choice(items)
+
+# Example usage with an empty list
+empty_list = []
+try:
+    choose_random_item(empty_list)
+except ValueError as e:
+    print(e)
+```
+
+**Output:**
+
+```
+items must not be empty
 ```
 
 ***
-## FunctionDef pairwise_sum(numbers)
-# Function: pairwise_sum(numbers: Iterable[float])
+## FunctionDef shuffle_copy(items)
+# Function: shuffle_copy(items: List[int])
 
 ## Overview
 
-The `pairwise_sum` function computes the arithmetic sum of an iterable of numbers using the Kahan summation algorithm to minimize numerical errors that can occur with standard floating-point arithmetic.
+The `shuffle_copy` function returns a new, randomly shuffled copy of a given list, ensuring the original list remains unchanged.
 
 ## parameters
 
-*   **`numbers`** (`Iterable[float]`): An iterable collection of numbers (floats or integers) to be summed.
+- `items`: A list of integers (`List[int]`) that you want to create a shuffled copy of.
 
 ## Description
 
-This function provides a numerically stable method for summing floating-point numbers, which is crucial when the numbers vary widely in magnitude or when summing a large quantity of values. Standard summation can lead to a loss of precision as small values are added to a large running total.
+This function provides a safe way to shuffle a list without modifying the original data structure, a concept known as non-mutating behavior. The logic proceeds in three simple steps:
 
-The `pairwise_sum` function implements the Kahan summation algorithm to counteract this problem. It maintains a running `total` and a `compensation` variable that accumulates the error from previous additions.
-
-The process for each value in the input `numbers` is as follows:
-1.  The input `value` is first cast to a `float`.
-2.  A corrected value `y` is calculated by subtracting the `compensation` (the error from the previous step) from the current `value`.
-3.  This corrected `y` is added to the running `total`, and the result is stored in a temporary variable `t`. This addition may still suffer from precision loss.
-4.  The new error is calculated as `(t - total) - y`. This captures the low-order bits that were lost during the summation of `total + y`. This new error is stored in the `compensation` variable for the next iteration.
-5.  The `total` is updated to the new sum `t`.
-
-By repeatedly carrying forward the rounding error, the algorithm ensures that the final sum is significantly more accurate than a naive summation.
-
-## Usage Notes
-
-- This function is more computationally intensive than Python's built-in `sum()` but offers superior precision.
-- It is highly recommended for scientific and financial calculations where accuracy is critical, especially with datasets containing a large number of floating-point values.
-- The function internally converts all numbers to `float`, so it can accept iterables containing integers as well.
-
-**Output Example**: A single floating-point number representing the accurate sum.
-```
-1000.0
-```
-
-## Example
-
-The following example demonstrates the precision advantage of `pairwise_sum` over the standard `sum()` function. When summing a large number, a small number, and the negation of the large number, a naive sum can lose the small number due to floating-point limitations.
+1.  A shallow copy of the input `items` list is created using `copy = list(items)`. This is the crucial step that prevents mutation of the original list.
+2.  The `random.shuffle()` method is then called on the `copy`. This function shuffles the elements of the `copy` list in-place, rearranging them into a random order.
+3.  Finally, the function returns the modified `copy`, which now contains the same elements as the original `items` list but in a new, random sequence.
 
 ```python
-# A list where a naive sum would likely result in 0.0 due to precision loss
-data = [1e10, 1, -1e10] * 1000
+def shuffle_copy(items: List[int]) -> List[int]:
+    """Return a shuffled copy of the given list without mutating the input.
 
-# Using the standard sum() function
-naive_sum = sum(data)
-print(f"Naive Sum: {naive_sum}")
+    Parameters:
+        items: A list of integers.
 
-# Using the pairwise_sum for a more accurate result
-accurate_sum = pairwise_sum(data)
-print(f"Pairwise (Kahan) Sum: {accurate_sum}")
-```
-
-**Output:**
-
-```
-Naive Sum: 0.0
-Pairwise (Kahan) Sum: 1000.0
-```
-
-***
-## FunctionDef split_into_chunks(text, size)
-# Function: split_into_chunks(text: str, size: int)
-
-## Overview
-
-The `split_into_chunks` function divides a given string into a series of smaller, fixed-size substrings.
-
-## parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `text` | str | The input string that needs to be divided into chunks. |
-| `size` | int | The desired length for each chunk. This value must be a positive integer. |
-
-## Description
-
-This function provides a straightforward way to segment a string into multiple parts of a specified length.
-
-The function first validates the `size` parameter. It checks if `size` is a positive integer. If `size` is less than or equal to zero, a `ValueError` is raised, as it's impossible to split a string into chunks of non-positive length.
-
-If the `size` is valid, the function proceeds to split the `text`. It uses a generator expression that iterates through the string with a step equal to `size`. The `range(0, len(text), size)` call generates the starting indices for each chunk (e.g., 0, `size`, `2*size`, etc.).
-
-For each starting index `i`, a substring is extracted using Python's slice notation: `text[i : i + size]`. This creates a chunk of length `size`. If the final slice extends beyond the string's length, Python handles it gracefully by including all remaining characters, which may result in a final chunk that is shorter than `size`.
-
-Finally, all the generated string chunks are collected into a `tuple` and returned.
-
-```python
-# Internal logic for splitting 'abcdefg' with size 3
-# 1. range(0, 7, 3) produces indices 0, 3, 6
-# 2. Slice at index 0: text[0:3] -> 'abc'
-# 3. Slice at index 3: text[3:6] -> 'def'
-# 4. Slice at index 6: text[6:9] -> 'g' (shorter than size)
-# 5. Result is collected into a tuple: ('abc', 'def', 'g')
+    Returns:
+        A new list containing the same integers in random order.
+    """
+    copy = list(items)
+    random.shuffle(copy)
+    return copy
 ```
 
 ## Usage Notes
 
-- The `size` parameter must be a positive integer. Providing `0` or a negative number will raise a `ValueError`.
-- The last chunk in the returned tuple may be shorter than the specified `size` if the total length of the `text` is not an exact multiple of `size`.
-- The function returns a `tuple` of strings, not a list.
+- The primary benefit of this function is that it is non-mutating. The original list passed as the `items` argument will not be altered.
+- This function depends on Python's built-in `random` module. Ensure it is imported in your script (e.g., `import random`) before calling `shuffle_copy`.
+- While the type hint specifies `List[int]`, the function's logic will work correctly with lists containing other data types, such as strings, floats, or mixed types.
 
-**Output Example**: A tuple containing string chunks.
-`('chunk1', 'chunk2', 'chnk3')`
+**Output Example**: A new list with the same elements as the input list, but in a randomized order.
+`[4, 1, 5, 3, 2]`
 
 ## Example
 
-```python
-# Example usage
-input_string = "This is a sample string to be split."
-chunk_size = 10
-result = split_into_chunks(input_string, chunk_size)
-print(result)
+The following example demonstrates how to use `shuffle_copy` and confirms that the original list remains unchanged after the function call.
 
-# Example with a string length that is not a multiple of the chunk size
-another_string = "HelloWorld"
-short_chunk_size = 4
-result_short = split_into_chunks(another_string, short_chunk_size)
-print(result_short)
+```python
+import random
+
+# Assume shuffle_copy is defined in the same scope
+
+# --- Example Usage ---
+original_numbers = [1, 2, 3, 4, 5]
+print(f"Original List (before): {original_numbers}")
+
+shuffled_numbers = shuffle_copy(original_numbers)
+
+print(f"Original List (after): {original_numbers}")
+print(f"Shuffled Copy: {shuffled_numbers}")
 ```
 
 **Output:**
 
+(Note: The exact order of the "Shuffled Copy" will vary with each execution due to its random nature.)
+
 ```
-('This is a ', 'sample str', 'ing to be ', 'split.')
-('Hell', 'oWor', 'ld')
+Original List (before): [1, 2, 3, 4, 5]
+Original List (after): [1, 2, 3, 4, 5]
+Shuffled Copy: [3, 5, 1, 2, 4]
 ```
 
 ***
