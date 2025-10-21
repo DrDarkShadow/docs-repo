@@ -3,39 +3,48 @@
 
 ## Overview
 
-The `Main` class serves as a container for several static utility methods and acts as the entry point for the Java application.
+The `Main` class serves as the entry point for the application and provides a collection of static utility methods for basic mathematical calculations and console output.
+
+## attributes
+
+This class does not have any attributes or fields. It contains static methods that operate on the parameters passed to them.
 
 ## Description
 
-This class provides basic functionalities through its static methods, which can be called without creating an instance of the class. It includes methods for arithmetic operations, factorial calculation, and printing messages.
+The `Main` class is a container for several independent, `static` methods. As the methods are static, they can be called directly on the class without needing to create an instance of `Main`. The class demonstrates basic Java functionalities including arithmetic operations, recursion, and console I/O.
 
-The class contains the following key methods:
+The class includes the following methods:
 
-- **`public static int add(int a, int b)`**
-  This method takes two integer parameters, `a` and `b`, and returns their sum. It performs a simple addition operation.
+- `add(int a, int b)`: A simple function that accepts two integer arguments, `a` and `b`, and returns their sum.
+- `factorial(int n)`: A recursive function that calculates the factorial of a non-negative integer `n`. It uses a base case where if `n` is less than or equal to 1, it returns 1. Otherwise, it recursively calls itself with `n - 1` and multiplies the result by `n`.
+- `greet(String name)`: A `void` function that takes a `String` argument `name` and prints a personalized greeting message to the standard output.
+- `main(String[] args)`: The primary entry point for the Java application. When the program is executed, this method is called. It demonstrates the usage of the `add`, `factorial`, and `greet` methods and prints their results to the console.
 
-- **`public static int factorial(int n)`**
-  This method calculates the factorial of a non-negative integer `n` using recursion. The base case for the recursion is when `n` is less than or equal to 1, in which case it returns 1. For any other positive integer, it returns `n` multiplied by the factorial of `n - 1`.
+The `main` method orchestrates the execution flow by calling the other utility methods with sample data:
 
-- **`public static void greet(String name)`**
-  This method accepts a `String` parameter `name` and prints a personalized greeting message to the standard output. It is a `void` method and does not return any value.
-
-- **`public static void main(String[] args)`**
-  This is the main entry point of the application. When the program is executed, this method is called. It demonstrates the usage of the `add`, `factorial`, and `greet` methods by invoking them with sample values and printing the results to the console.
+```java
+public static void main(String[] args) {
+    // Calls the add method with 5 and 10
+    System.out.println("Sum: " + add(5, 10));
+    // Calls the factorial method with 5
+    System.out.println("Factorial: " + factorial(5));
+    // Calls the greet method with "Prateek"
+    greet("Prateek");
+}
+```
 
 ## Usage Notes
 
-- All methods in this class are `static`, meaning they belong to the class itself and can be invoked directly using the class name (e.g., `Main.add(5, 10)`) without needing to create an object of the `Main` class.
-- The `factorial` method uses recursion. Providing a very large integer as input may result in a `StackOverflowError` due to excessive recursive calls.
-- The `main` method is the standard entry point for any executable Java program.
-
-**Output Example**: The output shown in the example below is what is printed to the console when the `main` method is executed.
+- All utility methods (`add`, `factorial`, `greet`) are `static` and should be invoked directly on the class, e.g., `Main.add(5, 10)`.
+- The `factorial` method is implemented recursively. Providing a very large integer as input may lead to a `StackOverflowError` due to deep recursion.
+- The `main` method is the designated starting point for execution by the Java Virtual Machine (JVM) and is where the program begins.
 
 ## Example
 
-The `main` method within the class provides a clear example of how to use the other static methods.
+The `main` method within the class itself provides a clear example of how to use the other methods. To run this example, you would compile and execute the `Main.java` file.
 
 ```java
+// Example usage is demonstrated within the main method
 public static void main(String[] args) {
     System.out.println("Sum: " + add(5, 10));
     System.out.println("Factorial: " + factorial(5));
