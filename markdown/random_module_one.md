@@ -14,123 +14,102 @@ The `num` function calculates and returns the sum of two provided arguments.
 
 ## Description
 
-This function provides a straightforward way to perform addition. It accepts two parameters, `a` and `b`, which are expected to be numerical values (integers or floats). The core logic uses the standard Python addition operator (`+`) to compute the sum of `a` and `b`. The resulting value is then returned by the function.
+This function performs a basic addition operation. It takes two parameters, `a` and `b`, which are expected to be numerical values (integers or floats). The core logic of the function is a single return statement that executes the expression `a + b`. The result of this addition is then immediately returned as the output of the function.
 
-For example, if `a` is `5` and `b` is `10`, the function will compute `5 + 10` and return `15`.
+For example, if `a` is `10` and `b` is `5`, the function will compute `10 + 5` and return the value `15`.
 
 ```python
-# The function simply returns the result of a + b
+# The core logic of the function
 return a + b
 ```
 
 ## Usage Notes
 
-- This function is designed primarily for numeric types like `int` and `float`.
-- If string values are passed as arguments, the function will perform string concatenation instead of mathematical addition (e.g., `num("hello", " world")` would return `"hello world"`).
-- Passing incompatible types (e.g., an integer and a string) will result in a `TypeError`.
+- The function relies on Python's `+` operator. Ensure that both `a` and `b` are of compatible types for addition.
+- If string values are passed as arguments, the function will perform string concatenation instead of mathematical addition. For example, `num("hello", "world")` would return `"helloworld"`.
+- Providing incompatible types (e.g., an integer and a string) will result in a `TypeError`.
 
-**Output Example**: A single numerical value representing the sum.
+**Output Example**: If the inputs are `10` and `20`, the returned value will be:
+`30`
 
 ## Example
 
 ```python
 # Example usage with two integers
-result = num(5, 10)
+result = num(15, 30)
 print(result)
 
-# Example usage with two floats
-result_float = num(3.14, 2.71)
-print(result_float)
+# Example usage with a float and an integer
+float_result = num(99.5, 10)
+print(float_result)
 ```
 
 **Output:**
 
 ```
-15
-5.85
+45
+109.5
 ```
 
 ***
 ## FunctionDef generate_random_integers
-# Function: generate_random_integers(count: int, start: int = 0, end: int = 100) -> List[int]
+# Function: generate_random_integers(count: int, start: int = 0, end: int = 100)
 
 ## Overview
 
-The `generate_random_integers` function creates and returns a list of a specified number of pseudo-random integers within a given inclusive range.
+The `generate_random_integers` function generates a list of a specified number of pseudo-random integers within a given inclusive range.
 
 ## parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `count` | `int` | The total number of integers to generate in the list. |
-| `start` | `int` | The inclusive lower bound for the random values. Defaults to `0`. |
-| `end` | `int` | The inclusive upper bound for the random values. Defaults to `100`. |
+| `count` | int | The total number of integers to generate. |
+| `start` | int | The inclusive lower bound for the random values. Defaults to `0`. |
+| `end` | int | The inclusive upper bound for the random values. Defaults to `100`. |
 
 ## Description
 
-This function provides a straightforward way to generate a list of random integers. It operates in three main steps:
+This function provides a straightforward way to create a list of random integers. The process is as follows:
 
-1.  **Input Validation**: It first checks if the `count` parameter is a non-negative number. If `count` is less than zero, it raises a `ValueError` to prevent invalid list creation.
-
-2.  **Range Correction**: The function ensures that the range defined by `start` and `end` is valid. If the provided `start` value is greater than the `end` value, it automatically swaps them. This allows the user to specify the range boundaries in any order without causing an error.
-
-3.  **Random Number Generation**: Using a list comprehension, the function iterates `count` times. In each iteration, it calls `random.randint(start, end)` to generate a single integer that is uniformly sampled from the inclusive range `[start, end]`. These integers are collected into a list which is then returned.
+1.  **Input Validation**: The function first checks if the `count` parameter is a non-negative number. If `count` is less than zero, it raises a `ValueError` to prevent invalid list creation.
+2.  **Range Correction**: It then compares the `start` and `end` parameters. If `start` is found to be greater than `end`, the function automatically swaps their values. This ensures that `random.randint` receives a valid, ordered range, making the function more robust to user input.
+3.  **Random Number Generation**: Finally, it uses a list comprehension to generate the random numbers. It iterates `count` times, and in each iteration, it calls `random.randint(start, end)`. This call produces a single integer uniformly sampled from the inclusive range `[start, end]`. The generated integers are collected into a list which is then returned.
 
 ```python
-# Internal logic for range correction
+# Internal logic for swapping an inverted range
 if start > end:
     start, end = end, start
-# Internal logic for generation
-return [random.randint(start, end) for _ in range(count)]
 ```
 
 ## Usage Notes
 
-- The function requires the `random` module to be imported to work correctly.
-- A `ValueError` will be raised if the `count` argument is a negative integer.
-- If `start` is greater than `end`, their values will be swapped internally, so `generate_random_integers(5, 10, 1)` is equivalent to `generate_random_integers(5, 1, 10)`.
-- The `start` and `end` parameters are optional and have default values of `0` and `100` respectively.
+- The `count` parameter must be a non-negative integer. Providing a negative value will raise a `ValueError`.
+- If the provided `start` value is greater than the `end` value, the function will automatically swap them to form a valid range. For instance, calling `generate_random_integers(5, 50, 10)` will be executed as if it were `generate_random_integers(5, 10, 50)`.
+- The generated integers are inclusive of both the `start` and `end` bounds.
+- This function depends on Python's built-in `random` module.
 
-**Output Example**: The function returns a list of integers.
+**Output Example**: A list containing the specified count of integers.
 
 ```
-[42, 8, 99, 23, 67]
+[42, 8, 99, 23, 75]
 ```
 
 ## Example
 
 ```python
-# Example: Generate 5 random integers between 10 and 20 (inclusive).
-# Note: The 'random' module must be imported first.
+# This function requires the 'random' module to be imported first.
 import random
-from typing import List
 
-def generate_random_integers(count: int, start: int = 0, end: int = 100) -> List[int]:
-    """Return a list of pseudo-random integers.
-
-    Parameters:
-        count: Number of integers to generate.
-        start: Inclusive lower bound for values.
-        end: Inclusive upper bound for values.
-
-    Returns:
-        A list containing `count` integers sampled uniformly in [start, end].
-    """
-    if count < 0:
-        raise ValueError("count must be non-negative")
-    if start > end:
-        start, end = end, start
-    return [random.randint(start, end) for _ in range(count)]
-
-result = generate_random_integers(5, 10, 20)
-print(result)
+# Example: Generate 5 random integers between 10 and 20 (inclusive).
+random_list = generate_random_integers(count=5, start=10, end=20)
+print(random_list)
 ```
 
 **Output:**
 
-(Note: The actual output will vary with each execution due to the random nature of the function.)
 ```
 [15, 11, 20, 18, 10]
+# Note: The actual output will vary with each execution due to its random nature.
 ```
 
 ***
@@ -139,56 +118,57 @@ print(result)
 
 ## Overview
 
-The `fibonacci` function computes the nth number in the Fibonacci sequence using an efficient iterative approach.
+The `fibonacci` function computes the nth number in the Fibonacci sequence using an iterative approach.
 
 ## parameters
 
-- `n` (int): The 0-indexed index of the Fibonacci number to be computed.
+- `n`: `int` - The 0-based index of the Fibonacci number to compute.
 
 ## Description
 
-This function calculates a number in the Fibonacci sequence, which starts with 0 and 1, and each subsequent number is the sum of the two preceding ones (e.g., 0, 1, 1, 2, 3, 5, ...).
+This function provides a memory-efficient way to calculate a number in the Fibonacci sequence. The logic proceeds as follows:
 
-The function begins by validating the input `n`. If `n` is a negative number, it raises a `ValueError` because the Fibonacci sequence is not defined for negative indices.
-
-It initializes two variables, `a` and `b`, to `0` and `1` respectively. These represent the first two numbers in the sequence, F₀ and F₁.
-
-The core logic resides in a `for` loop that iterates `n` times. In each iteration, the values of `a` and `b` are updated simultaneously using tuple assignment: `a, b = b, a + b`. This effectively shifts the sequence forward:
-1. The current value of `b` becomes the new `a`.
-2. The sum of the old `a` and `b` becomes the new `b`.
-
-After the loop completes `n` iterations, the variable `a` will hold the nth Fibonacci number, which is then returned. For `n=0`, the loop does not run, and the initial value of `a` (0) is correctly returned.
+1.  It first validates the input `n`. If `n` is a negative number, a `ValueError` is raised, as the Fibonacci sequence is not defined for negative indices.
+2.  Two variables, `a` and `b`, are initialized to `0` and `1` respectively. These represent the first two numbers in the sequence, F(0) and F(1).
+3.  A `for` loop iterates `n` times. In each iteration, the values of `a` and `b` are updated. The current value of `b` is assigned to `a`, and the sum of the old `a` and `b` is assigned to `b`. This is achieved in a single step using tuple assignment: `a, b = b, a + b`.
+4.  After the loop completes, `a` holds the value of the nth Fibonacci number, which is then returned. For an input of `n=0`, the loop does not execute, and the initial value of `a` (0) is correctly returned.
 
 ```python
-# For n = 3:
-# Initial state: a = 0, b = 1
-# Iteration 1: a becomes 1, b becomes 0 + 1 = 1
-# Iteration 2: a becomes 1, b becomes 1 + 1 = 2
-# Iteration 3: a becomes 2, b becomes 1 + 2 = 3
-# Loop ends. The function returns a, which is 2.
+# Inside the loop for n=5:
+# Initial: a=0, b=1
+# 1. a=1, b=1
+# 2. a=1, b=2
+# 3. a=2, b=3
+# 4. a=3, b=5
+# 5. a=5, b=8
+# Loop ends, returns a, which is 5.
 ```
 
 ## Usage Notes
 
-- The input `n` must be a non-negative integer. The function will raise a `ValueError` for negative inputs.
-- The function uses a 0-indexed sequence, so `fibonacci(0)` returns `0`, `fibonacci(1)` returns `1`, and so on.
-- This iterative implementation is memory-efficient and avoids the recursion depth limits and performance issues associated with naive recursive solutions for large `n`.
+- The input `n` must be a non-negative integer. Providing a negative value will result in a `ValueError`.
+- The function uses 0-indexing, meaning `fibonacci(0)` returns the first element of the sequence, which is `0`.
+- This iterative implementation is efficient in terms of memory and performance for large values of `n` compared to a naive recursive approach, as it avoids redundant calculations and deep recursion stacks.
 
-**Output Example**: The function returns a single integer representing the Fibonacci number at the specified index.
+**Output Example**:
+The function returns a single integer value.
+```
+55
+```
 
 ## Example
 
 ```python
 # Example usage
-# Find the 9th Fibonacci number (0-indexed)
-result = fibonacci(9)
+# Calculate the 10th Fibonacci number (0-indexed)
+result = fibonacci(10)
 print(result)
 ```
 
 **Output:**
 
 ```
-34
+55
 ```
 
 ***
@@ -197,71 +177,73 @@ print(result)
 
 ## Overview
 
-The `choose_random_item` function selects and returns a single, uniformly random item from a given list of strings.
+The `choose_random_item` function selects and returns a single random item from a given list of strings.
 
 ## parameters
 
-- `items` (List[str]): A non-empty list of strings from which to choose a random item.
+- **`items`** (`List[str]`): A non-empty list of strings from which to choose a random item.
 
 ## Description
 
-This function provides a safe way to select a random element from a list. It begins by performing a validation check on the input `items`. If the provided list is empty (`if not items:`), the function immediately raises a `ValueError` to prevent runtime errors that would occur from attempting to choose from an empty sequence.
+This function provides a simple way to get a random element from a list. The core logic is built around Python's `random.choice()` method.
 
-If the list is not empty, the function proceeds to use the `random.choice()` method from Python's standard `random` library. This method takes the `items` list as an argument and returns one of its elements, with each element having an equal probability of being selected.
+First, the function performs a validation check to ensure the input list `items` is not empty. If `items` is an empty list, the function will raise a `ValueError` with the message "items must not be empty". This prevents runtime errors from the underlying `random.choice()` function, which cannot operate on an empty sequence.
+
+If the list is valid (i.e., contains at least one element), the function then calls `random.choice(items)`. This method selects a single item from the list with a uniform probability, meaning every item has an equal chance of being chosen. The selected string is then returned as the result.
 
 ```python
 # Internal logic for a non-empty list
-return random.choice(items)
+import random
+items = ["apple", "banana", "cherry"]
+# The following line is the core operation
+selected_item = random.choice(items)
+# selected_item could be "apple", "banana", or "cherry"
 ```
-
-The function ensures that a valid string item is always returned, provided the input list is not empty.
 
 ## Usage Notes
 
-- This function requires the input `items` to be a list of strings.
-- A `ValueError` will be raised if an empty list is passed as an argument. Ensure you handle this exception or validate the list's contents before calling the function.
-- The selection is uniformly random, meaning every item in the list has an equal chance of being chosen on any given call.
-- The function depends on Python's built-in `random` module.
+- The input list `items` must not be empty. Providing an empty list will result in a `ValueError`.
+- This function depends on Python's `random` module. Ensure it is imported in the execution environment.
+- The selection is uniformly random, giving each item in the list an equal probability of being chosen.
 
-**Output Example**: The function returns a single string from the input list. For an input of `["red", "green", "blue"]`, a possible return value is `"green"`.
+**Output Example**: The function returns a single string from the provided list.
+
+```
+"banana"
+```
 
 ## Example
 
 ```python
-# Example usage
-# Note: The 'random' module must be available in the environment.
 import random
 from typing import List
 
-# Definition of the function as provided
 def choose_random_item(items: List[str]) -> str:
+    """Choose a single random item from a non-empty sequence."""
     if not items:
         raise ValueError("items must not be empty")
     return random.choice(items)
 
-# A list of possible choices
-color_options = ["red", "green", "blue", "yellow", "purple"]
+# Example usage:
+fruits = ["apple", "banana", "cherry", "date", "elderberry"]
+random_fruit = choose_random_item(fruits)
+print(f"The randomly chosen fruit is: {random_fruit}")
 
-# Call the function to get a random color
-selected_color = choose_random_item(color_options)
-
-print(f"The randomly selected color is: {selected_color}")
-
-# Example of error handling for an empty list
+# Example of error handling
 try:
-    empty_list = []
-    choose_random_item(empty_list)
+    choose_random_item([])
 except ValueError as e:
     print(f"Error: {e}")
 ```
 
 **Output:**
 
+The output for the successful call is random. One possible result is shown below.
+
 ```
-The randomly selected color is: blue
+The randomly chosen fruit is: cherry
 Error: items must not be empty
 ```
-*(Note: The actual color selected will vary with each execution as it is chosen randomly.)*
 
 ***
 ## FunctionDef shuffle_copy
@@ -269,72 +251,65 @@ Error: items must not be empty
 
 ## Overview
 
-The `shuffle_copy` function returns a new, randomly shuffled copy of a given list of integers without modifying the original list.
+The `shuffle_copy` function creates and returns a shuffled copy of a given list, ensuring the original list remains unchanged.
 
 ## parameters
 
-*   `items`: `List[int]` - The list of integers that will be copied and shuffled.
+- `items` (List[int]): A list of integers that you want to shuffle.
 
 ## Description
 
-This function provides a safe and non-destructive way to shuffle the elements of a list. The core logic operates in three steps:
+This function provides a safe way to shuffle a list without altering the original data structure. The process is straightforward and involves three main steps:
 
-1.  A new list named `copy` is created as a shallow copy of the input `items` list. This is achieved with the expression `list(items)`. This step is critical to ensure that the original list passed to the function remains unchanged.
+1.  A shallow copy of the input `items` list is created using `list(items)`. This is a critical step to ensure that the original list passed to the function is not modified. The new copy is stored in a local variable named `copy`.
 
-2.  The `random.shuffle(copy)` function is called. This function, part of Python's standard `random` module, shuffles the elements of the `copy` list *in-place*. It rearranges the items into a random permutation.
+2.  The `random.shuffle()` method is then called on the `copy`. This function shuffles the elements of the list in-place, rearranging them into a random order.
 
-3.  The function returns the `copy` list, which now contains the same elements as the original `items` list but in a new, random order.
+3.  Finally, the modified `copy` list, now containing the elements in a random sequence, is returned to the caller.
 
 ```python
-# The function creates a copy to avoid changing the original list.
-original = [1, 2, 3]
-shuffled = shuffle_copy(original) 
-# `original` is still [1, 2, 3]
-# `shuffled` might be [2, 3, 1]
+# Core logic of the function
+copy = list(items)
+random.shuffle(copy)
+return copy
 ```
 
 ## Usage Notes
 
-- This function is non-mutating. The original list passed as the `items` argument will not be altered.
-- The function requires the `random` module to be imported to use `random.shuffle`.
-- The order of the elements in the returned list is non-deterministic and will likely be different each time the function is called.
+- The primary benefit of this function is that it is non-mutating. The original list you provide as an argument will remain in its original order after the function completes.
+- This function relies on Python's `random` module. You must ensure that the `random` module is imported in the environment where this function is used.
+- While the type hint specifies `List[int]`, the function's logic will correctly handle lists containing elements of any data type (e.g., strings, floats, or mixed types).
 
-**Output Example**: A possible return value for an input of `[1, 2, 3, 4, 5]` could be:
-
-```
-[3, 1, 5, 2, 4]
-```
+**Output Example**: A new list containing the same elements as the input `items` list, but arranged in a random order. For an input of `[1, 2, 3]`, a possible output could be `[2, 3, 1]`.
 
 ## Example
 
 ```python
-import random
-from typing import List
+import random # This import is necessary for random.shuffle() to work
 
-def shuffle_copy(items: List[int]) -> List[int]:
-    """Return a shuffled copy of the given list without mutating the input."""
-    copy = list(items)
-    random.shuffle(copy)
-    return copy
+# Example usage of the shuffle_copy function
+original_numbers = [10, 20, 30, 40, 50]
+shuffled_numbers = shuffle_copy(original_numbers)
 
-# Example usage
-my_numbers = [10, 20, 30, 40, 50, 60]
-shuffled_numbers = shuffle_copy(my_numbers)
-
-print(f"Original List: {my_numbers}")
+print(f"Original List: {original_numbers}")
 print(f"Shuffled Copy: {shuffled_numbers}")
 
-# Verify the original list is unchanged
-print(f"Original list is still the same: {my_numbers == [10, 20, 30, 40, 50, 60]}")
+# Another example with different data
+original_items = ['apple', 'banana', 'cherry']
+shuffled_items = shuffle_copy(original_items)
+print(f"\nOriginal Items: {original_items}")
+print(f"Shuffled Items: {shuffled_items}")
 ```
 
 **Output:**
 
 ```
-Original List: [10, 20, 30, 40, 50, 60]
-Shuffled Copy: [40, 10, 60, 20, 50, 30]
-Original list is still the same: True
+Original List: [10, 20, 30, 40, 50]
+Shuffled Copy: [30, 50, 10, 20, 40]
+
+Original Items: ['apple', 'banana', 'cherry']
+Shuffled Items: ['cherry', 'apple', 'banana']
 ```
-*(Note: The order of elements in "Shuffled Copy" will vary with each execution.)*
+*(Note: The actual order of elements in the shuffled output will be random and may differ with each execution.)*
 
 ***
