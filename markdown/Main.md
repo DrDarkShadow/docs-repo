@@ -3,46 +3,75 @@
 
 ## Overview
 
-The `Main` class is a container for several static utility methods, including a function for addition, a recursive function for factorial calculation, and a procedure to print a greeting.
+The `Main` class serves as the entry point for the application and provides a collection of static utility methods for basic arithmetic, factorial calculation, and printing greetings.
+
+## attributes
+
+This class does not have any instance attributes as it primarily consists of static methods. The methods themselves accept parameters which are detailed in the description below.
 
 ## Description
 
-The `Main` class provides a set of standalone, static methods that can be called without creating an instance of the class. It also contains the primary `main` method, which serves as the entry point for the Java application.
+The `Main` class is a container for several independent, static helper functions and the primary `main` method which executes the program.
 
-The class includes the following methods:
+**Methods:**
 
--   `public static int add(int a, int b)`: This function takes two integer parameters, `a` and `b`, and returns their sum.
+-   `public static int add(int a, int b)`: This function takes two integer arguments, `a` and `b`, and returns their sum. It performs a simple addition operation.
 
--   `public static int factorial(int n)`: This function calculates the factorial of a non-negative integer `n` using recursion. The base case for the recursion is when `n` is less than or equal to 1, in which case it returns 1. Otherwise, it returns `n` multiplied by the factorial of `n - 1`.
+-   `public static int factorial(int n)`: This function calculates the factorial of a given non-negative integer `n` using recursion.
+    -   **Base Case**: If `n` is less than or equal to 1, the function returns 1.
+    -   **Recursive Step**: Otherwise, it returns the product of `n` and the factorial of `n - 1`.
 
--   `public static void greet(String name)`: This is a void method that takes a `String` parameter `name` and prints a formatted greeting message, "Hello, [name]!", to the standard output console.
+-   `public static void greet(String name)`: This function takes a `String` argument `name` and prints a formatted greeting message to the console. It has a `void` return type, meaning it does not return any value.
 
--   `public static void main(String[] args)`: This is the main entry point of the program. It demonstrates the usage of the `add`, `factorial`, and `greet` methods and prints their results to the console.
+-   `public static void main(String[] args)`: This is the main entry point of the Java application. When the program is run, this method is executed. It demonstrates the usage of the other three methods by:
+    1.  Calling `add(5, 10)` and printing the result.
+    2.  Calling `factorial(5)` and printing the result.
+    3.  Calling `greet("Prateek")` to print a message.
+
+The `main` method serves as a self-contained example of how to use the utility functions within the class.
 
 ## Usage Notes
 
-- All methods in this class are `static`, meaning they should be called directly on the class itself (e.g., `Main.add(5, 10)`), and no object instantiation is required.
-- The `factorial` method is recursive. Inputting a very large number can lead to a `StackOverflowError`.
-- The `greet` method prints directly to the console and does not return a value.
+-   All methods in this class are `static` and should be invoked directly on the class, e.g., `Main.add(5, 3)`. There is no need to instantiate the `Main` class.
+-   The `factorial` method is recursive. Providing a very large integer as input may lead to a `StackOverflowError`.
+-   The `greet` method prints its output directly to the standard output (console) and does not return the greeting string.
 
 ## Example
 
-The `main` method within the class provides a clear example of how to use the other static methods.
+The following code shows the complete class and its `main` method, which demonstrates the functionality.
 
 ```java
-public static void main(String[] args) {
-    // Calling the add function
-    System.out.println("Sum: " + add(5, 10));
+public class Main {
 
-    // Calling the factorial function
-    System.out.println("Factorial: " + factorial(5));
+    // Function to add two numbers
+    public static int add(int a, int b) {
+        return a + b;
+    }
 
-    // Calling the greet function
-    greet("Prateek");
+    // Function to find factorial of a number
+    public static int factorial(int n) {
+        if (n <= 1)
+            return 1;
+        else
+            return n * factorial(n - 1);
+    }
+
+    // Function to print a greeting message
+    public static void greet(String name) {
+        System.out.println("Hello, " + name + "!");
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Sum: " + add(5, 10));
+        System.out.println("Factorial: " + factorial(5));
+        greet("Prateek");
+    }
 }
 ```
 
 **Output:**
+
+When the `main` method is executed, the following output is printed to the console:
 
 ```
 Sum: 15
@@ -51,45 +80,45 @@ Hello, Prateek!
 ```
 
 ***
-### FunctionDef add
-# Function: add
+### FunctionDef add(a, b)
+# Function: add(int a, int b)
 
 ## Overview
 
-The `add` function calculates and returns the sum of two integer values.
+The `add` function computes the sum of two integer numbers.
 
 ## parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `a` | `int` | The first integer to be added. |
-| `b` | `int` | The second integer to be added. |
+| `a` | int | The first integer operand to be added. |
+| `b` | int | The second integer operand to be added. |
 
 ## Description
 
-The `add` function is a `public static` method that performs a simple arithmetic addition. It takes two integer parameters, `a` and `b`. Inside the function, the addition operator (`+`) is used to compute the sum of these two numbers. The resulting integer value is then returned by the function.
-
-Because the method is `static`, it can be called directly on the `Main` class without needing to create an instance of the class.
+The `add` function is a `public static` method that takes two integer parameters, `a` and `b`. The core logic of the function is to perform a standard arithmetic addition operation on these two integers. The expression `a + b` calculates their sum. The resulting integer value is then returned by the function. Because it is a `static` method, it can be called directly on the `Main` class without needing to create an instance of the class.
 
 ```java
+// The function simply returns the result of the addition
 return a + b;
 ```
 
 ## Usage Notes
 
-- This function is designed specifically for `int` data types. Providing arguments of other types will cause a compile-time error.
-- The return value is also an `int`. Be mindful of potential integer overflow if the sum of `a` and `b` exceeds the maximum value for an `int` (2,147,483,647). If an overflow occurs, the value will wrap around to the negative range.
+- As a `static` method, it should be invoked directly on the class, for example, `Main.add(5, 10)`.
+- The function operates within the standard range of a Java `int`. If the sum of `a` and `b` exceeds `Integer.MAX_VALUE` or is less than `Integer.MIN_VALUE`, an integer overflow will occur, and the result will wrap around.
+- The function only accepts `int` types. Passing other numeric types will require an explicit cast to `int`.
 
-**Output Example**: A single integer representing the sum.
+**Output Example**: The function returns a single integer value representing the sum.
 
 ## Example
 
 ```java
-// Example usage within the Main class
+// Example usage within a main method
 public static void main(String[] args) {
     int number1 = 15;
-    int number2 = 10;
-    int result = add(number1, number2);
+    int number2 = 7;
+    int result = Main.add(number1, number2);
     System.out.println("The sum is: " + result);
 }
 ```
@@ -97,12 +126,12 @@ public static void main(String[] args) {
 **Output:**
 
 ```
-The sum is: 25
+The sum is: 22
 ```
 
 ***
 ***
-### FunctionDef factorial
+### FunctionDef factorial(n)
 # Function: factorial(int n)
 
 ## Overview
@@ -115,41 +144,31 @@ The `factorial` function recursively calculates the factorial of a given non-neg
 
 ## Description
 
-This function provides a classic recursive implementation to compute the factorial of a number `n` (denoted as `n!`).
+This function implements the mathematical factorial operation using recursion. The factorial of a non-negative integer `n`, denoted by `n!`, is the product of all positive integers less than or equal to `n`.
 
-The logic follows the mathematical definition of a factorial:
-1.  **Base Case**: The factorial of 0 (`0!`) and 1 (`1!`) is 1. The function checks if the input `n` is less than or equal to 1. If it is, the function terminates the recursion and returns `1`.
-2.  **Recursive Step**: If `n` is greater than 1, the function multiplies `n` by the result of calling itself with the argument `n - 1`.
+The logic follows two main paths:
+1.  **Base Case**: If the input `n` is less than or equal to 1 (i.e., 0 or 1), the function returns `1`. This is because `0!` and `1!` are both defined as 1, and this condition serves as the termination point for the recursion.
+2.  **Recursive Step**: If `n` is greater than 1, the function returns the product of `n` and the result of calling itself with the argument `n - 1`. This process repeats, decrementing `n` by 1 in each subsequent call, until the base case is reached.
 
-For example, `factorial(4)` is computed as follows:
+For example, a call to `factorial(4)` would execute as follows:
 - `factorial(4)` returns `4 * factorial(3)`
 - `factorial(3)` returns `3 * factorial(2)`
 - `factorial(2)` returns `2 * factorial(1)`
-- `factorial(1)` returns `1` (base case is met)
+- `factorial(1)` returns `1` (base case)
 
-The results are then multiplied up the call stack: `2 * 1 = 2`, then `3 * 2 = 6`, and finally `4 * 6 = 24`.
-
-```java
-// Base case for n=1 or n=0
-if (n <= 1)
-    return 1;
-// Recursive step for n > 1
-else
-    return n * factorial(n - 1);
-```
+The results are then multiplied back up the call stack, yielding `4 * 3 * 2 * 1 = 24`.
 
 ## Usage Notes
 
-- This function is designed for non-negative integers. Passing a negative value for `n` will cause infinite recursion, leading to a `java.lang.StackOverflowError`.
-- The return type is `int`. Factorial values grow very quickly, and an integer overflow will occur for `n > 12`. The result of an overflow will be an incorrect, often negative, value. For calculating factorials of larger numbers, consider using a data type with a larger range, such as `long` or `java.math.BigInteger`.
+- This function is intended for non-negative integers. Providing a negative number will lead to infinite recursion and result in a `StackOverflowError`.
+- Due to the recursive implementation, very large values of `n` can also cause a `StackOverflowError` by exceeding the call stack depth limit.
+- The return type is `int`. Factorials grow very rapidly, and the result will overflow the standard 32-bit `int` data type for `n > 12`. For larger numbers, a `long` or `java.math.BigInteger` implementation would be necessary.
 
-**Output Example**: A single integer representing the calculated factorial.
-`120`
+**Output Example**: A call to `factorial(5)` would return the integer `120`.
 
 ## Example
 
 ```java
-// Example usage of the factorial function
 public class Main {
     public static int factorial(int n) {
         if (n <= 1)
@@ -159,6 +178,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        // Example usage
         int number = 5;
         int result = factorial(number);
         System.out.println("The factorial of " + number + " is: " + result);
@@ -174,30 +194,37 @@ The factorial of 5 is: 120
 
 ***
 ***
-### FunctionDef greet
-# Function: greet(String name)
+### FunctionDef greet(name)
+# Function: greet
 
 ## Overview
 
-The `greet` function prints a personalized greeting message to the standard output.
+The `greet` function prints a personalized greeting message to the standard output console.
 
 ## parameters
 
-- `name`: `String` - The name of the person or entity to greet. This string will be incorporated into the output message.
+- `name` (String): The name to be included in the greeting message.
 
 ## Description
 
-This `static` method provides a simple way to display a standardized greeting. It accepts a single `String` parameter, `name`. The core logic involves string concatenation: it combines the literal string `"Hello, "`, the value passed in the `name` parameter, and the literal string `"!"`. The resulting string is then printed to the standard console output using `System.out.println()`, which also appends a newline character at the end. Because the method is declared as `void`, it does not return any value.
+This static function provides a simple way to display a standardized greeting. It takes a single `String` argument, `name`. The core logic involves string concatenation: it combines the literal string `"Hello, "`, the value passed in the `name` parameter, and the literal string `"!"`. This complete string is then passed to the `System.out.println()` method, which prints the message to the console and appends a newline character.
+
+For example, if the `name` parameter is `"World"`, the function will concatenate `"Hello, "`, `"World"`, and `"!"` to form the final string `"Hello, World!"` before printing it.
+
+```java
+// The function concatenates strings and prints the result
+System.out.println("Hello, " + name + "!");
+```
 
 ## Usage Notes
 
-- This is a `static` method and should be called on the class, for example, `Main.greet("World")`.
-- The method prints directly to the console; it does not return the greeting string.
-- If a `null` value is passed as the `name`, the output will be "Hello, null!".
+- This is a `static` method, so it should be called directly on the `Main` class, like `Main.greet("Alice")`.
+- The function has a `void` return type, meaning it does not return any value. Its only effect is printing to the console.
+- If `null` is passed as the argument, the output will be "Hello, null!".
 
 ## Example
 
-```python
+```java
 public class Main {
     public static void greet(String name) {
         System.out.println("Hello, " + name + "!");
@@ -205,7 +232,6 @@ public class Main {
 
     public static void main(String[] args) {
         // Example usage
-        greet("Alice");
         greet("Developer");
     }
 }
@@ -214,70 +240,77 @@ public class Main {
 **Output:**
 
 ```
-Hello, Alice!
 Hello, Developer!
 ```
 
 ***
 ***
-### FunctionDef main
+### FunctionDef main(args)
 # Function: main
 
 ## Overview
 
-The `main` function serves as the entry point for the Java application, executing a sequence of calls to other methods and printing their results to the console.
+The `main` function serves as the primary entry point for the Java application, demonstrating the functionality of other methods within the class by calling them with predefined values and printing the results to the console.
 
 ## parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `args` | `String[]` | An array of `String` objects that can hold command-line arguments passed to the application upon execution. This parameter is not utilized in this function's body. |
+| `args` | `String[]` | An array of strings that accepts command-line arguments passed to the program at runtime. This parameter is not utilized within the current implementation of the method. |
 
 ## Description
 
-The `main` method is the starting point for the execution of the program. It is declared as `public` and `static`, meaning it can be called by the Java Virtual Machine (JVM) without creating an instance of the `Main` class.
+The `main` method is the starting point of execution for the Java program. The Java Virtual Machine (JVM) invokes this method when the program is run. The method is declared as `public` and `static`, allowing it to be called without creating an instance of the `Main` class.
 
-The method performs the following operations in sequence:
+The method's execution flow is as follows:
 
-1.  It calls the `add(5, 10)` method. The return value of this call is concatenated with the string `"Sum: "` and the entire resulting string is printed to the standard output console.
-2.  It calls the `factorial(5)` method. The integer result is concatenated with the string `"Factorial: "` and printed to the console.
-3.  It calls the `greet("Prateek")` method, passing the string `"Prateek"` as an argument. This method is expected to perform an action, such as printing a greeting, as it is a standalone statement.
-
-This function demonstrates a simple procedural execution flow and the integration of different helper methods (`add`, `factorial`, `greet`) to perform specific tasks.
-
-## Usage Notes
-
-- The `main` method is a special method in Java that the JVM looks for as the starting point of any Java program.
-- The method signature must be `public static void main(String[] args)` for the application to be launchable.
-- This implementation depends on the existence of three other methods: `add(int, int)`, `factorial(int)`, and `greet(String)`. These methods must be defined within the `Main` class or be otherwise accessible at compile time.
-
-## Example
+1.  It first calls the `add(5, 10)` method. The return value (the sum of 5 and 10) is concatenated with the string `"Sum: "` and printed to the standard output console.
+2.  Next, it calls the `factorial(5)` method. The calculated factorial of 5 is then concatenated with the string `"Factorial: "` and printed to the console.
+3.  Finally, it calls the `greet("Prateek")` method, passing the string `"Prateek"` as an argument. This method is expected to perform an action, such as printing a greeting message to the console.
 
 ```java
-// This is the code for the main method itself. It is executed when the
-// Java application is run.
-
 public static void main(String[] args) {
-    // Assuming add(5, 10) returns 15
+    // Calls the add method and prints the sum
     System.out.println("Sum: " + add(5, 10));
-
-    // Assuming factorial(5) returns 120
+    
+    // Calls the factorial method and prints the result
     System.out.println("Factorial: " + factorial(5));
-
-    // Assuming greet("Prateek") prints a greeting to the console
+    
+    // Calls the greet method with a name
     greet("Prateek");
 }
 ```
 
+## Usage Notes
+
+- This method is the designated entry point for the application and is automatically called by the JVM. It should not be called directly from other parts of the code.
+- The functionality of this method is dependent on the `add`, `factorial`, and `greet` methods being defined and accessible within the same scope.
+- While the `args` parameter is defined, it is not used in this specific implementation. However, it can be used to pass external data to the application from the command line.
+
+## Example
+
+To run this `main` method, you would compile the `Main.java` file and then execute the resulting class file from the command line.
+
+**Command:**
+
+```bash
+# First, compile the Java source file
+javac Main.java
+
+# Then, run the compiled class
+java Main
+```
+
 **Output:**
 
-Assuming standard implementations for the called methods, the console output would be:
+The expected output printed to the console would be:
 
 ```
 Sum: 15
 Factorial: 120
 Hello, Prateek!
 ```
+*(Note: The output of the `greet` method is assumed based on its name and argument.)*
 
 ***
 ***

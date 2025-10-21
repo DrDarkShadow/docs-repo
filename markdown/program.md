@@ -3,42 +3,39 @@
 
 ## Overview
 
-The `findMax` function iterates through an integer array to find and return its largest element.
+The `findMax` function iterates through an array of integers to find and return the largest value.
 
 ## parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `arr` | `int[]` | An array of integers in which to find the maximum value. |
-| `size` | `int` | The number of elements in the `arr` array. |
+| `arr` | `int[]` | An array of integers from which the maximum value will be found. |
+| `size` | `int` | The total number of elements in the `arr` array. |
 
 ## Description
 
-This function identifies the maximum value within an integer array. It begins by assuming the first element of the array, `arr[0]`, is the maximum and assigns it to a local variable `max`.
+This function provides a straightforward way to determine the maximum value within an integer array.
 
-The function then enters a `for` loop that iterates through the rest of the array elements, starting from the second element (`i = 1`) up to the element at index `size - 1`. In each iteration, it compares the current element `arr[i]` with the value stored in `max`.
+The logic begins by initializing a local variable `max` with the value of the first element in the array, `arr[0]`. It then enters a `for` loop that iterates through the remaining elements of the array, starting from the second element at index `1` up to the element at index `size - 1`.
 
-If `arr[i]` is greater than `max`, the function updates `max` to the value of `arr[i]`. This process ensures that `max` always holds the largest value encountered so far in the traversal. After the loop completes, the function returns the final value of `max`.
+Inside the loop, each element `arr[i]` is compared to the current `max` value. If `arr[i]` is greater than `max`, the `max` variable is updated with the value of `arr[i]`. This process ensures that after each comparison, `max` holds the largest value encountered so far.
+
+Once the loop completes, the function returns the final `max` value, which is the largest integer in the entire array.
 
 ## Usage Notes
 
-- The array `arr` should not be empty. The function accesses `arr[0]` without checking if `size` is greater than 0. Passing an empty array (with `size` as 0) will result in undefined behavior.
-- The `size` parameter must accurately represent the number of elements in the array to prevent reading from memory outside the array's bounds.
-- The function works correctly with arrays containing positive, negative, and zero values.
+- The input array `arr` should not be empty. The function accesses `arr[0]` without checking if `size` is 0, which will lead to undefined behavior if the array is empty.
+- The `size` parameter must accurately reflect the number of elements in the array to prevent out-of-bounds memory access.
 
-**Output Example**: A single integer representing the largest value in the array.
+**Output Example**: The function returns a single integer representing the highest value found in the array. For an input array `{10, 5, 45, 12, 8}`, the function would return `45`.
 
 ## Example
 
 ```c
 #include <stdio.h>
 
-// The function to be documented
+// Assuming the findMax function is defined here or included
 int findMax(int arr[], int size) {
-    if (size <= 0) {
-        // Handle empty or invalid size case, e.g., return a specific value or handle error
-        return -1; // Or some other error indicator
-    }
     int max = arr[0];
     for (int i = 1; i < size; i++) {
         if (arr[i] > max)
@@ -48,12 +45,13 @@ int findMax(int arr[], int size) {
 }
 
 int main() {
-    int numbers[] = {-10, 5, 100, -2, 50, 99};
-    int array_size = sizeof(numbers) / sizeof(numbers[0]);
+    int numbers[] = {10, 5, 45, 12, 8};
+    int array_size = 5;
     
-    int max_value = findMax(numbers, array_size);
+    // Call the findMax function
+    int result = findMax(numbers, array_size);
     
-    printf("The maximum value is: %d\n", max_value);
+    printf("The maximum value is: %d\n", result);
     
     return 0;
 }
@@ -62,55 +60,53 @@ int main() {
 **Output:**
 
 ```
-The maximum value is: 100
+The maximum value is: 45
 ```
 
 ***
 ## FunctionDef stringLength(str[])
-# Function: stringLength(char str[])
+# Function: stringLength
 
 ## Overview
 
-The `stringLength` function calculates the length of a null-terminated string, excluding the final null character.
+The `stringLength` function calculates the length of a null-terminated string by counting the number of characters before the null terminator.
 
 ## parameters
 
-- **`str`** (`char[]`): A character array representing the C-style string. This string must be properly terminated with a null character (`\0`).
+- **`str`** `char[]`: A character array representing the C-style string whose length is to be measured.
 
 ## Description
 
-This function provides a manual implementation for determining the length of a C-style string. It operates by iterating through the characters of the input array `str` until it encounters the null terminator (`\0`), which signifies the end of the string.
+This function provides a manual implementation for determining the length of a C-style string. It operates based on the principle that strings in C are terminated by a special null character, `\0`.
 
-The function initializes an integer counter, `length`, to `0`. It then enters a `while` loop that continues as long as the character at the current index, `str[length]`, is not the null character. Inside the loop, the `length` variable is incremented with each iteration. This process effectively counts the number of characters in the string.
+The function initializes an integer counter, `length`, to `0`. It then enters a `while` loop that iterates through the input character array `str`. The loop continues as long as the character at the current index, `str[length]`, is not the null terminator `\0`.
 
-When the loop condition `str[length] != '\0'` becomes false (i.e., the null terminator is found), the loop terminates. The final value of `length` represents the total number of characters before the null terminator. This value is then returned as the result.
+Inside the loop, the `length` variable is incremented with each character processed. This variable serves a dual purpose: it acts as the index for accessing characters in the array and as a counter for the string's length.
+
+Once the loop encounters the null terminator, the condition `str[length] != '\0'` becomes false, and the loop terminates. The function then returns the final value of `length`, which represents the total number of characters in the string, excluding the null terminator itself.
 
 ```c
-int stringLength(char str[]) {
-    int length = 0;
-    while (str[length] != '\0') {
-        length++;
-    }
-    return length;
+// The core logic of the function
+int length = 0;
+while (str[length] != '\0') {
+    length++;
 }
+return length;
 ```
 
 ## Usage Notes
 
-- The input character array `str` **must** be null-terminated. Failure to provide a null-terminated string will cause the function to read beyond the bounds of the array, leading to undefined behavior and potential program crashes.
-- The returned length does not include the null terminator character `\0` in its count.
-- The function does not modify the content of the input string `str`.
+- The input array `str` must be properly null-terminated. If the null terminator `\0` is missing, the function will continue to read beyond the bounds of the array, leading to undefined behavior and a potential program crash.
+- The length returned by the function does not include the final null terminator character. For example, the string `"abc"` has a length of 3.
 
-**Output Example**: The function returns an integer representing the number of characters in the string. For the input `"Hello"`, the function would return `5`.
+**Output Example**: The function returns an integer representing the number of characters in the string. For the input `"Hello"`, the return value would be `5`.
 
 ## Example
-
-The following C code demonstrates how to use the `stringLength` function. It requires a `main` function to be executed.
 
 ```c
 #include <stdio.h>
 
-// Assuming stringLength function is defined in the same file or included
+// Function definition
 int stringLength(char str[]) {
     int length = 0;
     while (str[length] != '\0') {
@@ -122,13 +118,11 @@ int stringLength(char str[]) {
 int main() {
     char myString[] = "Hello, World!";
     int len = stringLength(myString);
-    printf("The string is: \"%s\"\n", myString);
-    printf("The calculated length is: %d\n", len);
+    printf("The length of the string \"%s\" is %d\n", myString, len);
 
     char emptyString[] = "";
     int emptyLen = stringLength(emptyString);
-    printf("The string is: \"%s\"\n", emptyString);
-    printf("The calculated length is: %d\n", emptyLen);
+    printf("The length of the string \"%s\" is %d\n", emptyString, emptyLen);
     
     return 0;
 }
@@ -137,15 +131,13 @@ int main() {
 **Output:**
 
 ```
-The string is: "Hello, World!"
-The calculated length is: 13
-The string is: ""
-The calculated length is: 0
+The length of the string "Hello, World!" is 13
+The length of the string "" is 0
 ```
 
 ***
 ## FunctionDef isPrime(n)
-# Function: isPrime
+# Function: isPrime(int n)
 
 ## Overview
 
@@ -153,40 +145,38 @@ The `isPrime` function determines whether a given integer is a prime number.
 
 ## parameters
 
-- `n`: `int` - The integer to be checked for primality.
+- `n`: An `int` representing the integer to be checked for primality.
 
 ## Description
 
-This function implements a primality test to verify if the input number `n` is prime. The logic proceeds as follows:
+This function implements an efficient trial division algorithm to test if a number `n` is prime.
 
-1.  **Base Case Check**: The function first checks if `n` is less than or equal to 1. By definition, numbers less than or equal to 1 are not considered prime numbers, so the function immediately returns `false`.
-
-2.  **Iterative Division Check**: A `for` loop is initiated to check for potential divisors. The loop starts with `i = 2` and continues as long as `i * i <= n`. This condition is an optimization based on the fact that if a number `n` has a divisor larger than its square root, it must also have a corresponding divisor smaller than its square root. Therefore, we only need to test for divisors up to `sqrt(n)`.
-
-3.  **Modulus Operation**: Inside the loop, the expression `n % i == 0` checks if `n` is perfectly divisible by the current value of `i`.
-
-4.  **Return Value**:
-    - If a divisor is found (i.e., `n % i` is 0), `n` is not a prime number, and the function immediately returns `false`.
-    - If the loop completes without finding any divisors, it means `n` is only divisible by 1 and itself, confirming it is a prime number. In this case, the function returns `true`.
+The logic proceeds as follows:
+1.  First, it handles the base cases. By definition, prime numbers must be greater than 1. The function checks if `n <= 1`. If this condition is true, it immediately returns `false`.
+2.  If `n` is greater than 1, the function enters a `for` loop that iterates from `i = 2` up to the square root of `n`. The condition `i * i <= n` is a common optimization; if `n` has a divisor larger than its square root, it must also have a corresponding divisor smaller than its square root. Therefore, we only need to check for divisors up to `sqrt(n)`.
+3.  Inside the loop, it checks if `n` is perfectly divisible by the current iterator `i` using the modulo operator (`n % i == 0`). If a divisor is found, `n` is not a prime number, and the function immediately returns `false`.
+4.  If the loop completes without finding any divisors, it means `n` is not divisible by any integer between 2 and its square root. In this case, the number is prime, and the function returns `true`.
 
 ## Usage Notes
 
-- The function correctly handles edge cases by returning `false` for any integer less than or equal to 1.
-- The function uses an efficient trial division algorithm, which is suitable for moderately sized integers.
-- The return type is `bool`. To use the `bool`, `true`, and `false` keywords in C, you must include the `<stdbool.h>` header.
+- The function returns a boolean value (`true` or `false`) which requires including the `<stdbool.h>` header in C.
+- The input number `n` must be an integer. The function correctly handles non-positive integers by returning `false`.
+- This implementation is efficient for moderately sized integers but may be slow for very large numbers.
 
-**Output Example**: The function returns a boolean value. For an input of `29`, the output would be:
-```
+**Output Example**: A possible return value for a prime number input.
+```c
 true
 ```
 
 ## Example
 
+The following C code demonstrates how to use the `isPrime` function.
+
 ```c
 #include <stdio.h>
 #include <stdbool.h>
 
-// Definition of the isPrime function
+// Assuming the isPrime function is defined here or included
 bool isPrime(int n) {
     if (n <= 1)
         return false;
@@ -198,15 +188,20 @@ bool isPrime(int n) {
 }
 
 int main() {
-    int num1 = 7;
-    int num2 = 10;
+    int number1 = 17;
+    int number2 = 18;
 
-    // Example usage
-    bool result1 = isPrime(num1);
-    bool result2 = isPrime(num2);
+    if (isPrime(number1)) {
+        printf("%d is a prime number.\n", number1);
+    } else {
+        printf("%d is not a prime number.\n", number1);
+    }
 
-    printf("Is %d a prime number? %s\n", num1, result1 ? "true" : "false");
-    printf("Is %d a prime number? %s\n", num2, result2 ? "true" : "false");
+    if (isPrime(number2)) {
+        printf("%d is a prime number.\n", number2);
+    } else {
+        printf("%d is not a prime number.\n", number2);
+    }
 
     return 0;
 }
@@ -215,8 +210,8 @@ int main() {
 **Output:**
 
 ```
-Is 7 a prime number? true
-Is 10 a prime number? false
+17 is a prime number.
+18 is not a prime number.
 ```
 
 ***
@@ -225,76 +220,75 @@ Is 10 a prime number? false
 
 ## Overview
 
-The `main` function serves as the entry point for the program, demonstrating the usage of three utility functions: `findMax`, `stringLength`, and `isPrime`.
+The `main` function serves as the entry point for the program, demonstrating the usage of three distinct utility functions: `findMax`, `stringLength`, and `isPrime`.
 
 ## parameters
 
-This function does not accept any parameters.
+This function does not accept any command-line arguments.
 
 ## Description
 
 The `main` function executes a sequence of operations to showcase the functionality of other helper functions within the program.
 
-1.  **Find Maximum in an Array**:
-    *   An integer array `nums` is initialized with the values `{5, 12, 3, 19, 7}`.
-    *   The variable `size` is calculated by dividing the total size of the `nums` array by the size of a single integer element, effectively determining the number of elements in the array.
-    *   It then calls the `findMax` function, passing `nums` and `size` as arguments.
-    *   The maximum value returned by `findMax` is printed to the console.
+1.  **Finding the Maximum Number**:
+    *   An integer array named `nums` is initialized with the values `{5, 12, 3, 19, 7}`.
+    *   The variable `size` is calculated to determine the number of elements in the `nums` array. This is achieved by dividing the total size of the array (`sizeof(nums)`) by the size of a single element (`sizeof(nums[0])`).
+    *   The `findMax` function is called with `nums` and `size` as arguments.
+    *   The returned maximum value is then printed to the console using `printf`.
 
-2.  **Calculate String Length**:
-    *   A character array `name` is initialized with the string literal "Prateek".
-    *   It calls the `stringLength` function with `name` as the argument.
-    *   The length of the string returned by `stringLength` is printed to the console.
-
-3.  **Check for Prime Number**:
-    *   An integer variable `number` is initialized with the value `17`.
-    *   The `isPrime` function is called with `number` as the argument.
-    *   An `if-else` statement checks the boolean result from `isPrime`. It prints a message to the console indicating whether `17` is a prime number or not.
-
-Finally, the function returns `0`, signaling that the program has executed successfully.
-
-## Usage Notes
-
-- This function is the primary entry point for the C program.
-- It depends on the external functions `findMax`, `stringLength`, and `isPrime`. These functions must be defined and linked for the program to compile and run correctly.
-- All results are printed directly to the standard output (the console).
-
-**Output Example**: The function will print the results of the function calls to the console.
-
-## Example
-
-The `main` function is the starting point of execution. To run it, you compile the entire C program and execute the resulting binary.
-
-```c
-#include <stdio.h>
-
-// Assume findMax, stringLength, and isPrime are defined elsewhere
-int findMax(int arr[], int size);
-int stringLength(char str[]);
-int isPrime(int n);
-
-int main() {
+    ```c
     int nums[] = {5, 12, 3, 19, 7};
     int size = sizeof(nums) / sizeof(nums[0]);
-    
     printf("Maximum number: %d\n", findMax(nums, size));
-    
+    ```
+
+2.  **Calculating String Length**:
+    *   A character array (string) named `name` is initialized with the value `"Prateek"`.
+    *   The `stringLength` function is called with `name` as the argument.
+    *   The returned length of the string is printed to the console.
+
+    ```c
     char name[] = "Prateek";
     printf("Length of '%s': %d\n", name, stringLength(name));
-    
+    ```
+
+3.  **Checking for a Prime Number**:
+    *   An integer variable `number` is initialized with the value `17`.
+    *   The `isPrime` function is called with `number`.
+    *   An `if-else` statement checks the boolean result from `isPrime`. A message is printed to the console indicating whether `17` is a prime number or not.
+
+    ```c
     int number = 17;
     if (isPrime(number))
         printf("%d is a prime number.\n", number);
     else
         printf("%d is not a prime number.\n", number);
+    ```
 
-    return 0;
-}
+Finally, the function returns `0`, signaling that the program has executed successfully.
+
+## Usage Notes
+
+-   This `main` function is designed as a driver to test and demonstrate other functions.
+-   For this code to compile and run, the functions `findMax`, `stringLength`, and `isPrime` must be defined elsewhere in the project.
+-   The output is sent to the standard output stream (typically the console).
+-   The `<stdio.h>` header is required for the `printf` function.
+
+**Output Example**: The function will print the results of the function calls directly to the console.
+
+## Example
+
+To run this code, you would compile it with a C compiler (like GCC) and then execute the resulting binary. The `main` function is the program's entry point and is not called directly by user code.
+
+**Compilation and Execution:**
+
+```bash
+# Assuming the full code is in a file named program.c
+gcc program.c -o program
+./program
 ```
 
 **Output:**
-
-Assuming the helper functions are implemented correctly, the output will be:
 
 ```
 Maximum number: 19
