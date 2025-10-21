@@ -1,41 +1,46 @@
-## FunctionDef choose_random_item(items)
-# Function: choose_random_item(items: List[str]) -> str
+## FunctionDef choose_random_item
+# Function: choose_random_item(items: List[str])
 
 ## Overview
 
-The `choose_random_item` function selects and returns a single, uniformly random item from a given list of strings.
+The `choose_random_item` function selects and returns a single random item from a given list of strings.
 
 ## parameters
 
-- **items** (`List[str]`): A list of strings from which to choose a random item. This list must not be empty.
+- **`items`** (`List[str]`): A non-empty list of strings from which a random item will be chosen.
 
 ## Description
 
-This function provides a safe way to select a random element from a list. The core logic is divided into two main steps: validation and selection.
+This function provides a simple way to get a random element from a list. The core logic is handled by Python's built-in `random.choice()` method.
 
-First, the function validates the input list `items` by checking if it is empty with the condition `if not items:`. If the list is empty, it is impossible to choose an item, so the function raises a `ValueError` with the message "items must not be empty". This prevents potential errors from occurring in the selection process.
+Before attempting to select an item, the function first validates the input list `items`. It checks if the list is empty using the condition `if not items:`. If the list is found to be empty, the function immediately raises a `ValueError` with the message "items must not be empty". This prevents runtime errors that would occur if `random.choice()` were called with an empty sequence.
 
-If the list is not empty, the function proceeds to the selection step. It utilizes the `random.choice()` method from Python's `random` module to pick a single element from the `items` list. The `random.choice()` method ensures that each item in the list has an equal probability of being selected. The chosen string is then returned as the result.
+If the list is not empty, the function proceeds to call `random.choice(items)`. This method selects a single item from the list with uniform probability, meaning each item has an equal chance of being chosen. The selected string is then returned as the result.
 
 ```python
 # Internal logic example
 import random
 
-def choose_random_item(items: List[str]) -> str:
-    # 1. Validate that the list is not empty
+def choose_random_item(items: list[str]) -> str:
+    # 1. Check if the list is empty
     if not items:
+        # 2. Raise an error if it is
         raise ValueError("items must not be empty")
-    # 2. Return a random choice from the list
+    # 3. Return a random choice if it's not empty
     return random.choice(items)
 ```
 
 ## Usage Notes
 
 - The input list `items` must not be empty. Providing an empty list will result in a `ValueError`.
-- This function depends on Python's `random` module. Ensure it is available in the environment.
-- The selection is uniformly random, meaning every item in the provided list has an equal chance of being chosen.
+- This function relies on Python's `random` module. Ensure it is imported in the environment where the function is used.
+- The selection is uniformly random, meaning every item in the list has an equal chance of being chosen on any given call.
 
-**Output Example**: The function returns a single string that was present in the input `items` list. For an input of `['red', 'green', 'blue']`, a possible return value is `'green'`.
+**Output Example**: A single string from the input list.
+
+```
+"example_string"
+```
 
 ## Example
 
@@ -43,63 +48,67 @@ def choose_random_item(items: List[str]) -> str:
 # Example usage
 import random # This import is necessary for the function to work
 
-fruit_list = ["apple", "banana", "cherry", "date"]
-random_fruit = choose_random_item(fruit_list)
-print(f"The randomly chosen fruit is: {random_fruit}")
+# Define a list of options
+options = ["apple", "banana", "cherry", "date", "elderberry"]
 
-# Example of what happens with an empty list
-try:
-    choose_random_item([])
-except ValueError as e:
-    print(f"Error: {e}")
+# Call the function with the list
+selected_item = choose_random_item(options)
+
+# Print the result
+print(f"The randomly selected item is: {selected_item}")
 ```
 
 **Output:**
 
 ```
-The randomly chosen fruit is: cherry
-Error: items must not be empty
+The randomly selected item is: cherry
 ```
-(Note: The chosen fruit in the first line of the output is random and will vary with each execution.)
+*(Note: The actual output will be one of the items from the `options` list, chosen randomly.)*
 
 ***
-## FunctionDef shuffle_copy(items)
+## FunctionDef shuffle_copy
 # Function: shuffle_copy(items: List[int])
 
 ## Overview
 
-The `shuffle_copy` function creates and returns a new list containing the elements of the input list in a randomized order, without altering the original list.
+The `shuffle_copy` function returns a new, randomly shuffled copy of a given list, ensuring the original list remains unchanged.
 
 ## parameters
 
-- **`items`** (List[int]): A list of integers to be shuffled.
+- **`items`** (`List[int]`): The list of integers that you want to create a shuffled copy of.
 
 ## Description
 
-This function provides a safe way to get a shuffled version of a list while preserving the original. The process is as follows:
+This function provides a safe way to shuffle a list without altering the original data structure. The process involves three main steps:
 
-1.  A shallow copy of the input `items` list is created using `copy = list(items)`. This is a crucial step to prevent modification of the original list that was passed as an argument.
-2.  The `random.shuffle()` function is then called on the `copy`. This function shuffles the elements of the `copy` list in-place, rearranging them into a random sequence.
-3.  Finally, the function returns the modified `copy`, which is now a shuffled version of the original `items` list.
+1.  A shallow copy of the input `items` list is created using `copy = list(items)`. This is a critical step that isolates the operation from the original list, preventing its mutation.
+2.  The `random.shuffle()` method is then called on this `copy`. This function shuffles the elements of the list in-place, rearranging them into a random order.
+3.  Finally, the function returns the `copy`, which now contains the same elements as the original `items` list but in a new, randomized sequence.
 
 ```python
-# Internal logic for an input of [1, 2, 3]
-original_list = [1, 2, 3]
-copy_of_list = list(original_list) # copy_of_list is now [1, 2, 3]
-# random.shuffle(copy_of_list) modifies it in-place, e.g., to [3, 1, 2]
-# The function then returns the shuffled copy_of_list
+# Internal logic of the function
+import random
+
+# 1. A shallow copy of the input list is created.
+copy = list(items)
+
+# 2. The copy is shuffled in-place.
+random.shuffle(copy)
+
+# 3. The shuffled copy is returned.
+return copy
 ```
 
 ## Usage Notes
 
-- **Non-Mutating:** The primary feature of this function is that it does not change the input `items` list. It operates on a copy, leaving the original data intact.
-- **Random Module Dependency:** This function depends on Python's built-in `random` module. Ensure it is imported (e.g., `import random`) in the file where this function is used.
-- **Shallow Copy:** The function creates a shallow copy. If the list contains mutable objects (like other lists or dictionaries), the objects themselves are not duplicated, only their references. For a list of simple types like integers, this behaves as a full, independent copy.
+- This function is non-mutating. The original list passed as the `items` parameter will not be modified.
+- The function requires the `random` module to be imported in the script where it is used.
+- The order of elements in the returned list is non-deterministic and will likely be different on each execution.
 
-**Output Example**: A possible return value for an input of `[1, 2, 3, 4, 5]` could be:
+**Output Example**: A possible return value for an input of `[1, 2, 3]` could be:
 
 ```
-[3, 5, 1, 4, 2]
+[2, 1, 3]
 ```
 
 ## Example
@@ -108,6 +117,7 @@ copy_of_list = list(original_list) # copy_of_list is now [1, 2, 3]
 import random
 from typing import List
 
+# The function must be defined or imported
 def shuffle_copy(items: List[int]) -> List[int]:
     """Return a shuffled copy of the given list without mutating the input."""
     copy = list(items)
@@ -115,22 +125,18 @@ def shuffle_copy(items: List[int]) -> List[int]:
     return copy
 
 # Example usage
-original_numbers = [10, 20, 30, 40, 50]
-shuffled_numbers = shuffle_copy(original_numbers)
+original_list = [10, 20, 30, 40, 50]
+shuffled_list = shuffle_copy(original_list)
 
-print(f"Original List: {original_numbers}")
-print(f"Shuffled Copy: {shuffled_numbers}")
-
-# The original list remains unchanged
-assert original_numbers == [10, 20, 30, 40, 50]
+print(f"Original List: {original_list}")
+print(f"Shuffled Copy: {shuffled_list}")
 ```
 
 **Output:**
 
 ```
 Original List: [10, 20, 30, 40, 50]
-Shuffled Copy: [40, 10, 50, 20, 30]
+Shuffled Copy: [30, 50, 10, 20, 40]
 ```
-*(Note: The actual order of the "Shuffled Copy" will vary with each execution due to its random nature.)*
 
 ***
