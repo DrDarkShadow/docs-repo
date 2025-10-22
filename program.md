@@ -68,6 +68,71 @@ The maximum value is: 45
 ```
 
 ***
+## FunctionDef calculateAverage(arr[], size)
+# Function: calculateAverage(int arr[], int size)
+
+## Overview
+
+The `calculateAverage` function computes the arithmetic mean of the elements in a given integer array.
+
+## parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `int[]` | An array of integers whose average value is to be calculated. |
+| `size` | `int` | The number of elements in the `arr` array. |
+
+## Description
+
+This function provides a straightforward way to calculate the average of a set of integers.
+
+The logic begins by initializing an integer variable, `sum`, to `0`. This variable serves as an accumulator for the total value of all elements in the array.
+
+The function then iterates through the input array `arr` using a `for` loop. The loop runs from index `0` up to, but not including, the `size` parameter. In each iteration, the value of the current element `arr[i]` is added to the `sum`.
+
+After the loop has processed all elements, the function calculates the final average. It performs a type cast on the `sum` variable, converting it to a `double` before dividing it by `size`. This step is crucial to ensure that the division is a floating-point operation, which preserves any fractional part of the result, rather than an integer division, which would truncate it. The resulting `double` value is then returned.
+
+## Usage Notes
+
+- The `size` parameter must be a positive integer. Providing a `size` of `0` will result in division by zero, which causes undefined behavior.
+- Ensure that the `size` parameter accurately reflects the number of elements in the `arr` array to avoid reading from out-of-bounds memory.
+- If the sum of the array elements is expected to be very large, the `sum` variable might exceed the maximum value for an `int`. In such cases, consider modifying the function to use a larger data type like `long long` for the accumulator.
+
+**Output Example**: A floating-point number representing the average, such as `6.4`.
+
+## Example
+
+```c
+#include <stdio.h>
+
+// The function being documented
+double calculateAverage(int arr[], int size) {
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += arr[i];
+    }
+    return (double)sum / size;
+}
+
+// Example usage in a main function
+int main() {
+    int numbers[] = {10, 2, 8, 5, 7};
+    int count = 5;
+    double average = calculateAverage(numbers, count);
+    
+    printf("The average is: %f\n", average);
+    
+    return 0;
+}
+```
+
+**Output:**
+
+```
+The average is: 6.400000
+```
+
+***
 ## FunctionDef stringLength(str[])
 # Function: stringLength
 
