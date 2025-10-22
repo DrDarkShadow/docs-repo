@@ -149,7 +149,81 @@ The length of the empty string is: 0
 
 ***
 ## FunctionDef getRandom(min, max)
-Doc is waiting to be generated...
+# Function: getRandom(int min, int max)
+
+## Overview
+
+The `getRandom` function generates a pseudo-random integer within a specified inclusive range.
+
+## parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `min` | int | The minimum possible value for the random number (inclusive). |
+| `max` | int | The maximum possible value for the random number (inclusive). |
+
+## Description
+
+This function provides a reliable way to obtain a random integer between two boundary values, `min` and `max`.
+
+The function first ensures that the range is valid. It checks if `min` is greater than `max`. If this condition is true, it swaps the values of `min` and `max` internally. This makes the function robust, as it will work correctly even if the arguments are passed in the wrong order.
+
+The core logic for generating the random number is in the return statement: `return min + rand() % (max - min + 1);`.
+- `rand()`: This standard C library function returns a pseudo-random integer.
+- `(max - min + 1)`: This expression calculates the size of the desired range. For example, for a range from 5 to 10, this evaluates to `10 - 5 + 1 = 6`.
+- `rand() % (max - min + 1)`: The modulo operator (`%`) constrains the result of `rand()` to a number between `0` and `max - min`.
+- `min + ...`: This adds the `min` value to the result, effectively shifting the range from `[0, max - min]` to `[min, max]`.
+
+## Usage Notes
+
+- The range is inclusive, meaning both the `min` and `max` values are potential return values.
+- The function automatically handles cases where `min > max` by swapping the values.
+- For `rand()` to produce different sequences of numbers each time the program runs, it must be seeded. This is typically done once at the start of the program (e.g., in `main`) by calling `srand(time(NULL))`. You must include the `<stdlib.h>` and `<time.h>` headers for this.
+
+**Output Example**: A single integer value within the specified range. For `getRandom(1, 100)`, a possible output is `42`.
+
+## Example
+
+The following C code demonstrates how to use the `getRandom` function. It includes the necessary seeding for the random number generator.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Definition of the getRandom function
+int getRandom(int min, int max) {
+    if (min > max) {
+        int temp = min;
+        min = max;
+        max = temp;
+    }
+    return min + rand() % (max - min + 1);
+}
+
+int main() {
+    // Seed the random number generator once at the beginning
+    srand(time(NULL));
+
+    int min_val = 1;
+    int max_val = 10;
+
+    // Generate and print a random number between 1 and 10
+    int random_number = getRandom(min_val, max_val);
+    printf("A random number between %d and %d is: %d\n", min_val, max_val, random_number);
+
+    return 0;
+}
+```
+
+**Output:**
+
+(The actual output will vary on each execution)
+```
+A random number between 1 and 10 is: 7
+```
+
+***
 ## FunctionDef isPrime(n)
 # Function: isPrime(int n)
 
