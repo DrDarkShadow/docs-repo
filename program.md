@@ -148,6 +148,8 @@ The length of the empty string is: 0
 ```
 
 ***
+## FunctionDef getRandom(min, max)
+Doc is waiting to be generated...
 ## FunctionDef isPrime(n)
 # Function: isPrime(int n)
 
