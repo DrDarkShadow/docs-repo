@@ -67,6 +67,72 @@ Error caught as expected: items must not be empty
 ```
 
 ***
+## FunctionDef second_largest(nums)
+# Function: second_largest(nums)
+
+## Overview
+
+The `second_largest` function finds and returns the second-largest number from a list of numbers.
+
+## parameters
+
+- `nums` (list): A list of numbers (integers or floats) from which to find the second-largest value.
+
+## Description
+
+This function provides a reliable way to determine the second-largest value in a list by first removing any duplicate entries.
+
+The function begins by converting the input `nums` list into a `set` to eliminate duplicate values, and then converts it back into a `list` named `unique_nums`.
+
+```python
+unique_nums = list(set(nums))
+```
+
+Next, it sorts `unique_nums` in ascending order using the `sort()` method. After sorting, the largest number will be at the end of the list, and the second-largest will be the second-to-last element.
+
+```python
+unique_nums.sort()
+```
+
+Finally, the function checks if the `unique_nums` list contains at least two elements. If it does, it returns the second-to-last element (`unique_nums[-2]`), which corresponds to the second-largest number. If the list has fewer than two unique elements, finding a second-largest number is impossible, so the function returns `None`.
+
+## Usage Notes
+
+- The function correctly handles lists with duplicate numbers by considering only the unique values.
+- If the input list contains fewer than two unique numbers (e.g., `[5]`, `[8, 8, 8]`, or `[]`), the function will return `None`.
+- The input list can contain a mix of integers and floats.
+- The original input list `nums` is not modified by the function.
+
+**Output Example**: A numeric value (integer or float) or `None`.
+
+## Example
+
+```python
+# Example 1: A list with duplicates
+numbers1 = [10, 20, 4, 45, 99, 99]
+result1 = second_largest(numbers1)
+print(f"The second largest number in {numbers1} is: {result1}")
+
+# Example 2: A list with fewer than two unique numbers
+numbers2 = [5, 5, 5]
+result2 = second_largest(numbers2)
+print(f"The second largest number in {numbers2} is: {result2}")
+
+# Example 3: An empty list
+numbers3 = []
+result3 = second_largest(numbers3)
+print(f"The second largest number in {numbers3} is: {result3}")
+```
+
+**Output:**
+
+```
+The second largest number in [10, 20, 4, 45, 99, 99] is: 45
+The second largest number in [5, 5, 5] is: None
+The second largest number in [] is: None
+```
+
+***
 ## FunctionDef count_even_odd(numbers)
 # Function: count_even_odd(numbers)
 
