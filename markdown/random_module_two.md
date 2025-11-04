@@ -67,6 +67,69 @@ Error caught as expected: items must not be empty
 ```
 
 ***
+## FunctionDef fibonacci
+# Function: fibonacci(n: int)
+
+## Overview
+
+The `fibonacci` function computes the nth number in the Fibonacci sequence using an iterative approach.
+
+## parameters
+
+- `n` (int): The 0-based index of the Fibonacci number to be computed.
+
+## Description
+
+This function provides a memory-efficient way to calculate a Fibonacci number. The Fibonacci sequence starts with 0 and 1, and each subsequent number is the sum of the two preceding ones (e.g., 0, 1, 1, 2, 3, 5, 8...).
+
+The function begins by validating the input `n`. If `n` is a negative number, it raises a `ValueError` because the Fibonacci sequence is not defined for negative indices.
+
+It initializes two variables, `a` and `b`, to `0` and `1` respectively. These represent the first two numbers in the sequence, F₀ and F₁.
+
+The core of the function is a `for` loop that runs `n` times. In each iteration, the values of `a` and `b` are updated simultaneously. The current value of `b` is assigned to `a`, and the sum of the old `a` and `b` is assigned to `b`. This process effectively steps through the sequence:
+
+```python
+# Initial state: a=0, b=1
+# After 1st iteration: a=1, b=1
+# After 2nd iteration: a=1, b=2
+# After 3rd iteration: a=2, b=3
+a, b = b, a + b
+```
+
+After the loop completes, the variable `a` holds the nth Fibonacci number, which is then returned. For an input of `n=0`, the loop does not run, and the initial value of `a` (0) is correctly returned.
+
+## Usage Notes
+
+- The index `n` is 0-based. For example, `fibonacci(0)` returns `0`, and `fibonacci(1)` returns `1`.
+- The function will raise a `ValueError` if a negative integer is provided as the argument.
+- This iterative implementation is efficient for large values of `n` as it avoids the overhead and potential stack overflow of a naive recursive approach.
+
+**Output Example**: The function returns a single integer which is the Fibonacci number at the specified index `n`.
+
+## Example
+
+```python
+# Example usage
+# Calculate the 9th Fibonacci number (0-indexed)
+index = 9
+fib_number = fibonacci(index)
+print(f"The Fibonacci number at index {index} is: {fib_number}")
+
+# Example of invalid input
+try:
+    fibonacci(-1)
+except ValueError as e:
+    print(e)
+```
+
+**Output:**
+
+```
+The Fibonacci number at index 9 is: 34
+n must be non-negative
+```
+
+***
 ## FunctionDef generate_random_integers
 # Function: generate_random_integers(count: int, start: int = 0, end: int = 100) -> List[int]
 
