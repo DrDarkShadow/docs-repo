@@ -67,6 +67,63 @@ Error caught as expected: items must not be empty
 ```
 
 ***
+## FunctionDef count_even_odd(numbers)
+# Function: count_even_odd(numbers)
+
+## Overview
+
+The `count_even_odd` function iterates through a list of integers and counts how many are even and how many are odd.
+
+## parameters
+
+*   **`numbers`** (`list` of `int`): A list or other iterable containing the integers to be evaluated.
+
+## Description
+
+This function provides a straightforward way to tally even and odd numbers within a collection. It initializes two counter variables, `even` and `odd`, to zero.
+
+The function then enters a `for` loop that iterates over each element, referred to as `num`, in the input `numbers` list. Inside the loop, it uses the modulo operator (`%`) to check if `num` is divisible by 2.
+
+- If `num % 2` equals `0`, the number is even, and the `even` counter is incremented by one.
+- If the result is not `0`, the number is odd, and the `odd` counter is incremented.
+
+After the loop has processed all the numbers in the list, the function returns a tuple containing the final counts of the `even` and `odd` numbers, in that specific order.
+
+```python
+# The function returns the two counters as a tuple
+return even, odd
+```
+
+## Usage Notes
+
+- The input `numbers` must be an iterable containing numeric types that support the modulo operator.
+- The function will raise a `TypeError` if it encounters a non-numeric type within the list during the check.
+- The returned value is always a tuple of two integers: `(count_of_even, count_of_odd)`.
+
+**Output Example**: A tuple containing two integers.
+`(2, 3)`
+
+## Example
+
+```python
+# Example usage
+sample_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+even_count, odd_count = count_even_odd(sample_data)
+
+print(f"List of numbers: {sample_data}")
+print(f"Number of even numbers: {even_count}")
+print(f"Number of odd numbers: {odd_count}")
+```
+
+**Output:**
+
+```
+List of numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+Number of even numbers: 5
+Number of odd numbers: 5
+```
+
+***
 ## FunctionDef fibonacci
 # Function: fibonacci(n: int)
 
