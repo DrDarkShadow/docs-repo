@@ -9,37 +9,68 @@ The `findMax` function iterates through an array of integers to find and return 
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `arr` | `int[]` | An array of integers from which the maximum value will be found. |
-| `size` | `int` | The total number of elements in the `arr` array. |
+| `arr` | `int[]` | The input array of integers to be searched. |
+| `size` | `int` | The total number of elements in the `arr`. |
 
 ## Description
 
 This function provides a straightforward way to determine the maximum value within an integer array.
 
-The logic begins by initializing a local integer variable, `max`, with the value of the first element of the input array, `arr[0]`. This value serves as the initial benchmark for comparison.
+The logic begins by initializing a variable `max` with the value of the first element of the array, `arr[0]`. It then proceeds to loop through the remaining elements of the array, starting from the second element at index `1` up to the last element specified by `size`.
 
-Next, the function enters a `for` loop that iterates through the array, starting from the second element (at index `1`) up to the element just before the specified `size`. Inside the loop, each element `arr[i]` is compared to the current value stored in `max`. If the current element `arr[i]` is greater than `max`, the `max` variable is updated to hold this new, larger value.
+Inside the loop, each element `arr[i]` is compared to the current `max` value. If the current element `arr[i]` is greater than `max`, the `max` variable is updated with this new, larger value. This process ensures that after each comparison, `max` always holds the largest value found so far.
 
-After the loop completes, having checked all elements from the second to the last, the function returns the final value of `max`. This returned value is the largest integer found in the entire array.
+After the loop completes, the function returns the final `max` value.
+
+```c
+int findMax(int arr[], int size) {
+    // Assume the first element is the largest
+    int max = arr[0];
+    
+    // Iterate from the second element to the end of the array
+    for (int i = 1; i < size; i++) {
+        // If a larger element is found, update max
+        if (arr[i] > max)
+            max = arr[i];
+    }
+    
+    // Return the largest value found
+    return max;
+}
+```
 
 ## Usage Notes
 
-- The input array `arr` must not be empty (i.e., `size` must be at least 1). The function assumes `arr[0]` is a valid element to initialize the `max` value. Passing an empty array will result in undefined behavior.
-- The `size` parameter must accurately reflect the number of elements in the array to prevent out-of-bounds memory access and ensure correct results.
+Important points to consider when using this function:
 
-**Output Example**: The function returns a single integer representing the maximum value found in the array. For an input array `{10, 5, 45, 12, 8}`, the output would be `45`.
+- The `size` parameter must accurately reflect the number of elements in the `arr` to prevent out-of-bounds memory access or incorrect results.
+- The function assumes the array is not empty. Passing an array with `size` as 0 will result in undefined behavior due to the initial access of `arr[0]`.
+- The function works with both positive and negative integers.
+
+**Output Example**: The function returns a single integer representing the maximum value in the array. For an input array `{10, 50, 20}`, the output would be `50`.
 
 ## Example
 
-```python
+```c
 #include <stdio.h>
 
-// The findMax function definition
+// Declaration of the function
+int findMax(int arr[], int size);
+
+int main() {
+    int numbers[] = {15, 98, 23, 4, 55, 76};
+    int array_size = 6;
+    
+    // Call the function to find the maximum value
+    int result = findMax(numbers, array_size);
+    
+    printf("The maximum value in the array is: %d\n", result);
+    
+    return 0;
+}
+
+// Definition of the function
 int findMax(int arr[], int size) {
-    if (size <= 0) {
-        // Handle empty or invalid array size
-        return -1; // Or some other error indicator
-    }
     int max = arr[0];
     for (int i = 1; i < size; i++) {
         if (arr[i] > max)
@@ -47,24 +78,12 @@ int findMax(int arr[], int size) {
     }
     return max;
 }
-
-// Example usage in a main function
-int main() {
-    int numbers[] = {10, 5, 45, 12, 8};
-    int n = sizeof(numbers) / sizeof(numbers[0]);
-    
-    int maxValue = findMax(numbers, n);
-    
-    printf("The maximum value is: %d\n", maxValue);
-    
-    return 0;
-}
 ```
 
 **Output:**
 
 ```
-The maximum value is: 45
+The maximum value in the array is: 98
 ```
 
 ***
@@ -80,37 +99,47 @@ The `findMin` function iterates through an array of integers to find and return 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `arr` | `int[]` | The array of integers to be searched. |
-| `size` | `int` | The total number of elements in the `arr`. |
+| `size` | `int` | The number of elements in the `arr` array. |
 
 ## Description
 
-This function provides a straightforward way to find the minimum value within an integer array.
+The `findMin` function provides a straightforward way to determine the minimum value within an integer array.
 
-The logic begins by initializing a variable `min` with the value of the first element of the array, `arr[0]`. This variable acts as a temporary placeholder for the smallest value found so far.
+The function begins by initializing a local integer variable `min` with the value of the first element of the array, `arr[0]`. This variable serves as the initial candidate for the minimum value.
 
-Next, the function enters a `for` loop that starts from the second element of the array (at index `1`) and continues until it has iterated through all remaining elements up to the index `size - 1`. Inside the loop, it compares the current element, `arr[i]`, with the value stored in `min`.
+It then enters a `for` loop that iterates through the array, starting from the second element (index `1`) up to, but not including, the `size` of the array. In each iteration, it compares the current element `arr[i]` with the value stored in `min`.
 
-If the current element `arr[i]` is less than `min`, the value of `min` is updated to `arr[i]`. This process ensures that `min` always holds the smallest value encountered in the portion of the array that has been scanned.
-
-After the loop completes, the function returns the final value of `min`, which is the absolute minimum value in the entire array.
+If the current element `arr[i]` is less than `min`, the value of `min` is updated to `arr[i]`. This process ensures that `min` always holds the smallest value encountered so far. After the loop has traversed all the elements, the function returns the final value of `min`.
 
 ## Usage Notes
 
-- The array passed to the function must not be empty. The function directly accesses `arr[0]` without checking if `size` is greater than 0. Passing an empty array will result in undefined behavior.
-- The `size` parameter must accurately represent the number of elements in the array. Providing a `size` larger than the actual array length will lead to out-of-bounds memory access.
-- The function is designed to work with arrays of standard integers, including both positive and negative values.
+- The function assumes the array is not empty. Passing an array with `size` as 0 or less will result in undefined behavior due to the initial access of `arr[0]`.
+- The `size` parameter must accurately represent the number of elements in `arr`. An incorrect size can lead to either not all elements being checked or reading from memory outside the array's bounds.
+- The function correctly handles arrays containing positive, negative, and zero values.
 
-**Output Example**: The function returns a single integer representing the minimum value found.
-```
-12
-```
+**Output Example**: The function returns a single integer representing the smallest value found in the array. For an input array `{10, -5, 100}`, the output would be `-5`.
 
 ## Example
 
 ```c
 #include <stdio.h>
 
-// Definition of the findMin function
+// Declaration of the function
+int findMin(int arr[], int size);
+
+int main() {
+    int numbers[] = {42, 15, 7, 99, 23, 3, -10};
+    int array_size = 7;
+    
+    // Call the findMin function
+    int result = findMin(numbers, array_size);
+    
+    printf("The minimum value is: %d\n", result);
+    
+    return 0;
+}
+
+// Definition of the function
 int findMin(int arr[], int size) {
     int min = arr[0];
     for (int i = 1; i < size; i++) {
@@ -119,24 +148,12 @@ int findMin(int arr[], int size) {
     }
     return min;
 }
-
-int main() {
-    int numbers[] = {45, 21, 89, 12, 5};
-    int n = sizeof(numbers) / sizeof(numbers[0]);
-
-    // Example usage
-    int minValue = findMin(numbers, n);
-
-    printf("The minimum value is: %d\n", minValue);
-
-    return 0;
-}
 ```
 
 **Output:**
 
 ```
-The minimum value is: 5
+The minimum value is: -10
 ```
 
 ***
@@ -151,34 +168,45 @@ The `calculateAverage` function computes the arithmetic mean of the elements in 
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `arr` | `int[]` | An array of integers whose average value is to be calculated. |
-| `size` | `int` | The number of elements in the `arr` array. |
+| `arr` | `int[]` | An array of integers for which the average will be calculated. |
+| `size` | `int` | The total number of elements in the `arr` array. |
 
 ## Description
 
-This function provides a straightforward way to calculate the average of a set of integers.
+This function provides a straightforward way to calculate the average of a list of integers. It operates by first initializing an integer variable `sum` to `0`.
 
-The logic begins by initializing an integer variable, `sum`, to `0`. This variable serves as an accumulator for the total value of all elements in the array.
+It then enters a `for` loop that iterates from `i = 0` up to, but not including, the `size` of the array. In each iteration, the value of the current element `arr[i]` is added to the `sum`.
 
-The function then iterates through the input array `arr` using a `for` loop. The loop runs from index `0` up to, but not including, the `size` parameter. In each iteration, the value of the current element `arr[i]` is added to the `sum`.
+After the loop has processed all elements, the function calculates the final average. To ensure a precise floating-point result and avoid integer division truncation, the accumulated `sum` is explicitly cast to a `double` before being divided by the `size`. The resulting `double` value, representing the average, is then returned.
 
-After the loop has processed all elements, the function calculates the final average. It performs a type cast on the `sum` variable, converting it to a `double` before dividing it by `size`. This step is crucial to ensure that the division is a floating-point operation, which preserves any fractional part of the result, rather than an integer division, which would truncate it. The resulting `double` value is then returned.
+```c
+// Inside the function
+int sum = 0;
+for (int i = 0; i < size; i++) {
+    sum += arr[i];
+}
+// The sum is cast to a double for accurate division
+return (double)sum / size;
+```
 
 ## Usage Notes
 
-- The `size` parameter must be a positive integer. Providing a `size` of `0` will result in division by zero, which causes undefined behavior.
-- Ensure that the `size` parameter accurately reflects the number of elements in the `arr` array to avoid reading from out-of-bounds memory.
-- If the sum of the array elements is expected to be very large, the `sum` variable might exceed the maximum value for an `int`. In such cases, consider modifying the function to use a larger data type like `long long` for the accumulator.
+- The `size` parameter must be greater than zero. Passing `size` as `0` will result in a division-by-zero error, leading to undefined behavior.
+- The value of `size` should accurately represent the number of elements in the `arr` array to prevent incorrect calculations or memory access errors.
+- The function returns a `double` to accurately represent averages that are not whole numbers.
 
-**Output Example**: A floating-point number representing the average, such as `6.4`.
+**Output Example**: A floating-point number representing the calculated average.
 
 ## Example
 
 ```c
 #include <stdio.h>
 
-// The function being documented
+// Assuming the calculateAverage function is defined here or included
 double calculateAverage(int arr[], int size) {
+    if (size == 0) {
+        return 0.0; // Handle division by zero
+    }
     int sum = 0;
     for (int i = 0; i < size; i++) {
         sum += arr[i];
@@ -186,13 +214,13 @@ double calculateAverage(int arr[], int size) {
     return (double)sum / size;
 }
 
-// Example usage in a main function
 int main() {
-    int numbers[] = {10, 2, 8, 5, 7};
-    int count = 5;
-    double average = calculateAverage(numbers, count);
+    int numbers[] = {5, 10, 15, 20, 25};
+    int size = sizeof(numbers) / sizeof(numbers[0]);
     
-    printf("The average is: %f\n", average);
+    double avg = calculateAverage(numbers, size);
+    
+    printf("The average is: %f\n", avg);
     
     return 0;
 }
@@ -201,61 +229,52 @@ int main() {
 **Output:**
 
 ```
-The average is: 6.400000
+The average is: 15.000000
 ```
 
 ***
 ## FunctionDef stringLength(str[])
-# Function: stringLength
+# Function: stringLength(char str[])
 
 ## Overview
 
-The `stringLength` function calculates the length of a null-terminated string, excluding the final null character.
+The `stringLength` function calculates the length of a null-terminated string by counting the number of characters before the null terminator.
 
 ## parameters
 
-- **`str`** `char[]`: The input character array (string) that must be null-terminated.
+- `str`: A `char[]` array representing the null-terminated string whose length is to be determined.
 
 ## Description
 
-The `stringLength` function provides a manual implementation for determining the length of a C-style string. It operates by iterating through the characters of the input array until it finds the null terminator character (`'\0'`).
+This function provides a manual implementation for calculating the length of a C-style string. It operates based on the fundamental principle that strings in C are sequences of characters terminated by a special null character (`\0`).
 
-The function begins by initializing an integer variable `length` to `0`. This variable serves a dual purpose: it acts as an index to access characters in the `str` array and as a counter for the string's length.
+The function initializes an integer counter, `length`, to `0`. It then enters a `while` loop that iterates through the input character array `str`. The loop's condition, `str[length] != '\0'`, checks if the character at the current index (`length`) is the null terminator.
 
-A `while` loop forms the core of the function. The loop's condition checks if the character at the current index, `str[length]`, is not the null terminator `'\0'`.
-- If the character is not `'\0'`, the loop body executes, incrementing `length` by one.
-- This process continues, moving to the next character in the array in each iteration.
-
-When the loop finally encounters the null terminator `'\0'`, the condition `str[length] != '\0'` becomes false, and the loop terminates. At this point, the value of `length` is equal to the number of characters that were read before the null terminator.
-
-Finally, the function returns the integer value of `length`.
+For each character that is not the null terminator, the `length` counter is incremented. This process continues until the loop encounters the `\0` character, which signifies the end of the string. At this point, the loop terminates, and the function returns the final value of `length`. This value represents the total number of characters in the string, excluding the null terminator itself.
 
 ```c
-// The loop iterates until the null character is found.
+// The core logic iterates until the null terminator is found.
+int length = 0;
 while (str[length] != '\0') {
-    // The length counter is incremented for each character.
     length++;
 }
-// The final count is returned.
 return length;
 ```
 
 ## Usage Notes
 
-- The input array `str` **must** be a valid null-terminated string. Failure to provide a null terminator will cause the function to read beyond the buffer's boundary, leading to undefined behavior.
-- The returned length does not include the null terminator character `'\0'`. For example, the string `"hi"` has a length of 2, but it occupies 3 bytes in memory (`'h'`, `'i'`, `'\0'`).
-- An empty string `""` will correctly return a length of `0`.
+- The input array `str` **must** be a valid null-terminated string. If the null terminator `\0` is missing, the function will continue to read beyond the bounds of the array, leading to undefined behavior and potential program crashes.
+- The length returned by the function does not include the null terminator `\0` in its count.
+- The function does not modify the content of the input string `str`.
 
-**Output Example**: An integer representing the number of characters in the string. For the input `"example"`, the output would be `7`.
+**Output Example**: For an input string `"Hello"`, which is stored in memory as `['H', 'e', 'l', 'l', 'o', '\0']`, the function will return `5`.
 
 ## Example
-
-The following C code demonstrates how to use the `stringLength` function.
 
 ```c
 #include <stdio.h>
 
-// Assuming stringLength function is defined in the same file or included
+// Definition of the stringLength function
 int stringLength(char str[]) {
     int length = 0;
     while (str[length] != '\0') {
@@ -267,12 +286,13 @@ int stringLength(char str[]) {
 int main() {
     char myString[] = "Hello, World!";
     int len = stringLength(myString);
+    printf("The string is: \"%s\"\n", myString);
     printf("The length of the string is: %d\n", len);
 
     char emptyString[] = "";
     int emptyLen = stringLength(emptyString);
-    printf("The length of the empty string is: %d\n", emptyLen);
-
+    printf("The length of an empty string is: %d\n", emptyLen);
+    
     return 0;
 }
 ```
@@ -280,8 +300,9 @@ int main() {
 **Output:**
 
 ```
+The string is: "Hello, World!"
 The length of the string is: 13
-The length of the empty string is: 0
+The length of an empty string is: 0
 ```
 
 ***
@@ -303,25 +324,23 @@ The `getRandom` function generates a pseudo-random integer within a specified in
 
 This function provides a reliable way to obtain a random integer between two boundary values, `min` and `max`.
 
-The function first ensures that the range is valid. It checks if `min` is greater than `max`. If this condition is true, it swaps the values of `min` and `max` internally. This makes the function robust, as it will work correctly even if the arguments are passed in the wrong order.
+The function first ensures that the range boundaries are correctly ordered. It checks if `min` is greater than `max`. If this condition is true, it swaps the two values using a temporary variable `temp`. This makes the function robust, as it will work correctly even if the arguments are passed in the wrong order.
 
-The core logic for generating the random number is in the return statement: `return min + rand() % (max - min + 1);`.
-- `rand()`: This standard C library function returns a pseudo-random integer.
-- `(max - min + 1)`: This expression calculates the size of the desired range. For example, for a range from 5 to 10, this evaluates to `10 - 5 + 1 = 6`.
-- `rand() % (max - min + 1)`: The modulo operator (`%`) constrains the result of `rand()` to a number between `0` and `max - min`.
-- `min + ...`: This adds the `min` value to the result, effectively shifting the range from `[0, max - min]` to `[min, max]`.
+The core of the function is the expression `min + rand() % (max - min + 1)`. Let's break this down:
+1.  `rand()`: This is a standard C library function that returns a pseudo-random integer between `0` and `RAND_MAX`.
+2.  `(max - min + 1)`: This calculates the total number of possible integer values in the desired range. For example, for a range from 5 to 10, this would be `10 - 5 + 1 = 6`.
+3.  `rand() % (max - min + 1)`: The modulo operator (`%`) scales the output of `rand()` to a number within the range of `0` to `max - min`.
+4.  `min + ...`: This final addition shifts the generated number, which is in the range `[0, max - min]`, to the desired final range of `[min, max]`.
 
 ## Usage Notes
 
-- The range is inclusive, meaning both the `min` and `max` values are potential return values.
-- The function automatically handles cases where `min > max` by swapping the values.
-- For `rand()` to produce different sequences of numbers each time the program runs, it must be seeded. This is typically done once at the start of the program (e.g., in `main`) by calling `srand(time(NULL))`. You must include the `<stdlib.h>` and `<time.h>` headers for this.
+- This function depends on the standard C `rand()` function. For generating different sequences of random numbers across program executions, it is essential to seed the random number generator once at the start of your program using `srand()`. A common practice is to seed it with the current time: `srand(time(NULL));`.
+- The range is inclusive, meaning the returned value can be equal to `min` or `max`.
+- The function automatically handles cases where `min` is provided as a larger value than `max` by swapping them internally.
 
-**Output Example**: A single integer value within the specified range. For `getRandom(1, 100)`, a possible output is `42`.
+**Output Example**: A single integer value between `min` and `max`, inclusive.
 
 ## Example
-
-The following C code demonstrates how to use the `getRandom` function. It includes the necessary seeding for the random number generator.
 
 ```c
 #include <stdio.h>
@@ -339,15 +358,16 @@ int getRandom(int min, int max) {
 }
 
 int main() {
-    // Seed the random number generator once at the beginning
+    // Seed the random number generator once
     srand(time(NULL));
 
-    int min_val = 1;
-    int max_val = 10;
+    int lower_bound = 1;
+    int upper_bound = 100;
 
-    // Generate and print a random number between 1 and 10
-    int random_number = getRandom(min_val, max_val);
-    printf("A random number between %d and %d is: %d\n", min_val, max_val, random_number);
+    // Get a random number between 1 and 100
+    int random_number = getRandom(lower_bound, upper_bound);
+
+    printf("A random number between %d and %d is: %d\n", lower_bound, upper_bound, random_number);
 
     return 0;
 }
@@ -355,9 +375,8 @@ int main() {
 
 **Output:**
 
-(The actual output will vary on each execution)
 ```
-A random number between 1 and 10 is: 7
+A random number between 1 and 100 is: 42
 ```
 
 ***
@@ -376,21 +395,29 @@ The `isPrime` function determines whether a given integer is a prime number.
 
 This function provides an efficient method to check if an integer `n` is a prime number.
 
-The logic begins by handling the base cases. According to the definition of prime numbers, any integer less than or equal to 1 is not prime. The function first checks if `n <= 1` and, if this condition is met, it immediately returns `false`.
+The logic begins by handling the base cases. According to the definition of prime numbers, any integer less than or equal to 1 is not prime. The function reflects this by immediately returning `false` if `n <= 1`.
 
-If `n` is greater than 1, the function proceeds to check for factors. It iterates through integers starting from `i = 2` up to the square root of `n`. The loop condition `i * i <= n` is an optimization that avoids checking divisors beyond the square root of `n`, as any factor larger than the square root would have a corresponding factor smaller than it.
+For numbers greater than 1, the function iterates from `i = 2` up to the square root of `n`. The condition `i * i <= n` is an optimization that avoids checking divisors beyond the square root of `n`, as any factor larger than the square root would have a corresponding factor smaller than it.
 
-Inside the loop, it uses the modulo operator (`%`) to check if `n` is perfectly divisible by the current integer `i`. If `n % i == 0` is true, it means a factor other than 1 and `n` has been found, so `n` is not a prime number. In this case, the function returns `false` and terminates.
+Inside the loop, it uses the modulo operator (`%`) to check if `n` is perfectly divisible by the current iterator `i`. If `n % i == 0` is true, it means a divisor has been found, proving that `n` is not a prime number. In this case, the function immediately returns `false`.
 
-If the loop completes without finding any factors, it confirms that `n` is only divisible by 1 and itself, thus it is a prime number, and the function returns `true`.
+If the loop completes without finding any divisors, it confirms that `n` is only divisible by 1 and itself, thus it is a prime number, and the function returns `true`.
 
 ## Usage Notes
 
-- Numbers less than or equal to 1 will always return `false`.
-- The function returns a boolean value: `true` if the number is prime, and `false` otherwise.
-- This implementation is optimized to check for divisors only up to the square root of the input number, making it efficient.
+- The function correctly identifies that numbers less than or equal to 1 are not prime.
+- The return type is `bool`. In C, this will evaluate to `true` (typically 1) or `false` (typically 0).
+- This implementation is efficient for moderately sized integers.
 
-**Output Example**: The function returns a boolean value, which in C might be represented as `1` (for true) or `0` (for false) when printed or used in integer contexts.
+**Output Example**: The function returns a boolean value.
+
+```c
+// For a prime number like 7
+true 
+
+// For a non-prime number like 8
+false
+```
 
 ## Example
 
@@ -398,7 +425,7 @@ If the loop completes without finding any factors, it confirms that `n` is only 
 #include <stdio.h>
 #include <stdbool.h>
 
-// Assuming the isPrime function is defined here or included
+// The isPrime function definition
 bool isPrime(int n) {
     if (n <= 1)
         return false;
@@ -413,6 +440,7 @@ int main() {
     int num1 = 29;
     int num2 = 10;
 
+    // Example usage
     bool result1 = isPrime(num1);
     bool result2 = isPrime(num2);
 
@@ -436,59 +464,69 @@ Is 10 a prime number? false
 
 ## Overview
 
-The `main` function serves as the entry point for the program, demonstrating the usage of several utility functions to find a maximum value in an array, calculate string length, and determine if a number is prime.
+The `main` function serves as the entry point for the program, demonstrating the usage of several utility functions: `findMax`, `stringLength`, and `isPrime`.
 
 ## parameters
 
-This function does not take any parameters.
+This function does not accept any parameters upon execution.
 
 ## Description
 
-The `main` function executes a sequence of demonstrations for other utility functions.
+The `main` function orchestrates a series of operations to showcase the functionality of other helper functions within the program.
 
-1.  **Find Maximum in Array**:
+1.  **Find Maximum in an Array**:
     - An integer array `nums` is initialized with the values `{5, 12, 3, 19, 7}`.
-    - The `size` of the array is calculated by dividing the total size of the array in bytes (`sizeof(nums)`) by the size of a single integer element (`sizeof(nums[0])`).
-    - The `findMax` function is called with `nums` and `size` as arguments. The returned value, which is the largest number in the array, is then printed to the console.
+    - The `size` of the array is calculated by dividing the total memory occupied by the array (`sizeof(nums)`) by the memory size of a single element (`sizeof(nums[0])`).
+    - The `findMax` function is called with the `nums` array and its `size`. The result, which is the largest number in the array, is then printed to the console.
 
 2.  **Calculate String Length**:
-    - A character array `name` is initialized with the string `"Prateek"`.
-    - The `stringLength` function is called with the `name` array. The function returns the number of characters in the string, which is then printed.
+    - A character array `name` is initialized with the string literal "Prateek".
+    - The `stringLength` function is invoked with the `name` array. The function calculates the number of characters in the string (excluding the null terminator), and this length is printed.
 
-3.  **Prime Number Check**:
-    - An integer variable `number` is initialized with the value `17`.
-    - The `isPrime` function is called with `number`. The function returns a boolean-like value (true or false).
-    - An `if-else` block checks the return value and prints a message indicating whether `17` is a prime number or not.
+3.  **Check for Prime Number**:
+    - An integer variable `number` is declared and initialized with the value `17`.
+    - The `isPrime` function is called with `number` as its argument.
+    - An `if-else` statement evaluates the boolean result from `isPrime`. It prints a message indicating whether `number` is a prime number or not.
 
-Finally, the function returns `0` to the operating system, which conventionally signifies that the program executed successfully without errors.
+Finally, the function returns `0`, a standard convention indicating that the program terminated successfully.
 
 ## Usage Notes
 
-- This `main` function is a driver function, designed to showcase the functionality of `findMax`, `stringLength`, and `isPrime`.
-- For this code to compile and run, the implementations for `findMax`, `stringLength`, and `isPrime` must be available and linked.
-- The program requires the `<stdio.h>` header for the `printf` function.
+- This function is the primary entry point for the C program and is automatically called when the program starts.
+- It depends on three external functions: `findMax`, `stringLength`, and `isPrime`. These functions must be defined and linked for the program to compile and run correctly.
+- The `printf` function is used for output, which requires including the standard I/O library header (`<stdio.h>`).
 
-**Output Example**: A possible console output from running the program.
-
-```
-Maximum number: 19
-Length of 'Prateek': 7
-17 is a prime number.
-```
+**Output Example**: The console output when the program is executed, assuming the helper functions are implemented correctly.
 
 ## Example
 
-The `main` function is the entry point of a C program and is not called by other functions within the code. It is executed when the compiled program is run. To use it, you would compile the source file and run the resulting executable.
+The `main` function is not called by other functions but is executed when the compiled program is run. The code below is the complete implementation for this entry point.
 
 ```c
-// Assuming the code is in a file named 'program.c'
-// and the helper functions are also defined.
+#include <stdio.h>
 
-// 1. Compile the code using a C compiler like GCC
-// > gcc program.c -o program
+// Assuming findMax, stringLength, and isPrime are defined elsewhere
+int findMax(int arr[], int size);
+int stringLength(char str[]);
+int isPrime(int n);
 
-// 2. Run the executable
-// > ./program
+int main() {
+    int nums[] = {5, 12, 3, 19, 7};
+    int size = sizeof(nums) / sizeof(nums[0]);
+    
+    printf("Maximum number: %d\n", findMax(nums, size));
+    
+    char name[] = "Prateek";
+    printf("Length of '%s': %d\n", name, stringLength(name));
+    
+    int number = 17;
+    if (isPrime(number))
+        printf("%d is a prime number.\n", number);
+    else
+        printf("%d is not a prime number.\n", number);
+
+    return 0;
+}
 ```
 
 **Output:**

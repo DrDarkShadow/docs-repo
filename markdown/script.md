@@ -14,17 +14,17 @@ The `add` function computes the sum of two numbers.
 
 ## Description
 
-This function takes two arguments, `a` and `b`, and returns their sum. It uses the standard addition operator (`+`) to perform the calculation. The primary purpose is to encapsulate the addition operation for reuse and clarity.
+This function takes two parameters, `a` and `b`, and returns their sum. It uses the standard addition operator (`+`) to perform the calculation. The function directly returns the result of the `a + b` operation.
 
 ```javascript
-// The function simply returns the result of a + b
+// The function returns the result of the addition
 return a + b;
 ```
 
 ## Usage Notes
 
-- This function is intended for numeric inputs. If strings are provided, the `+` operator will perform string concatenation instead of numeric addition. For example, `add("2", "3")` would result in `"23"`.
-- The function does not perform any type checking on its inputs. It is the caller's responsibility to ensure that the arguments are numbers.
+- While designed for numbers, the `+` operator in JavaScript will perform string concatenation if one or both of the operands are strings. For example, `add(5, "5")` would result in `"55"`.
+- The function does not include any type checking or error handling. It is the caller's responsibility to ensure that both arguments are of the `Number` type for a predictable arithmetic result.
 
 **Output Example**: The function returns a single `Number` which is the sum of the two input parameters.
 
@@ -32,14 +32,16 @@ return a + b;
 
 ```javascript
 // Example usage
-let result = add(5, 10);
+const num1 = 10;
+const num2 = 25;
+const result = add(num1, num2);
 console.log(result);
 ```
 
 **Output:**
 
 ```
-15
+35
 ```
 
 ***
@@ -48,39 +50,38 @@ console.log(result);
 
 ## Overview
 
-The `factorial` function recursively calculates the factorial of a given non-negative integer.
+The `factorial` function recursively calculates the factorial of a given non-negative integer `n`.
 
 ## parameters
 
--   `n` (Number): The non-negative integer for which the factorial will be calculated.
+- `n` (Number): The non-negative integer for which the factorial will be calculated.
 
 ## Description
 
-This function implements the factorial calculation using recursion. The logic is divided into two main parts:
+This function implements the factorial calculation using a recursive approach. The logic is based on the mathematical definition of a factorial, where the factorial of a non-negative integer `n` is the product of all positive integers up to `n`.
 
-1.  **Base Case**: The function first checks if the input number `n` is less than or equal to 1. If it is, the function returns `1`. This is the termination condition for the recursion, as the factorial of 1 (`1!`) and 0 (`0!`) is defined as 1.
+The function operates as follows:
 
-2.  **Recursive Step**: If `n` is greater than 1, the function returns the product of `n` and the result of calling itself with the argument `n - 1`. This process continues until the base case is reached.
+- **Base Case:** It first checks if the input `n` is less than or equal to 1. If true, the function returns `1`. This serves as the termination condition for the recursion, as the factorial of 1 (`1!`) and 0 (`0!`) are both defined as 1.
 
-For example, calling `factorial(4)` will execute as follows:
-- `4 * factorial(3)`
-- `4 * (3 * factorial(2))`
-- `4 * (3 * (2 * factorial(1)))`
-- `4 * (3 * (2 * 1))`
-- The final result is `24`.
+- **Recursive Step:** If `n` is greater than 1, the function returns the product of `n` and the result of calling itself with the argument `n - 1`. This process continues to break down the number until it reaches the base case.
 
+For example, `factorial(4)` is computed as follows:
 ```javascript
-// Ternary operator implementation
-return n <= 1 ? 1 : n * factorial(n - 1);
+factorial(4) = 4 * factorial(3)
+             = 4 * (3 * factorial(2))
+             = 4 * (3 * (2 * factorial(1)))
+             = 4 * (3 * (2 * 1))
+             = 24
 ```
 
 ## Usage Notes
 
--   This function is designed for non-negative integers. Providing a negative number will cause an infinite recursion, leading to a stack overflow error.
--   Due to the nature of recursion, calculating the factorial of very large numbers can also lead to a stack overflow error, as each recursive call adds a new frame to the call stack.
--   The input `n` should be an integer. While JavaScript might handle floating-point numbers, the mathematical concept of a factorial is typically defined only for non-negative integers.
+- The function is intended for non-negative integers. Providing a negative number will cause an infinite recursion, leading to a stack overflow error.
+- The base case `n <= 1` ensures that `factorial(0)` correctly returns `1`.
+- Be cautious with large input values. Deep recursion can lead to a "Maximum call stack size exceeded" error. Furthermore, the result can quickly grow larger than JavaScript's `Number.MAX_SAFE_INTEGER`, which may cause a loss of precision.
 
-**Output Example**: A single number representing the calculated factorial.
+**Output Example**: A single number representing the calculated factorial value.
 
 ## Example
 
@@ -99,7 +100,7 @@ The factorial of 5 is 120
 
 ***
 ## FunctionDef greet
-# Function: greet(name)
+# Function: greet
 
 ## Overview
 
@@ -111,34 +112,36 @@ The `greet` function prints a personalized greeting message to the console.
 
 ## Description
 
-This function provides a simple way to display a personalized greeting. When called, it takes a single argument, `name`, which is expected to be a string.
+This function provides a simple way to display a standardized greeting to the console. It accepts a single string argument, `name`.
 
-The function utilizes a template literal (`` ` ``) to construct a new string, embedding the provided `name` into the phrase "Hello, ...!". The resulting string, for example, `Hello, World!`, is then passed to the `console.log()` method, which outputs it to the standard console. The function does not return any value; its sole purpose is to produce this console output.
+The core logic uses the `console.log()` method to output a formatted string. The string is created using a template literal: `` `Hello, ${name}!` ``. This syntax allows for string interpolation, where the value of the `name` parameter is directly embedded into the output string, creating a personalized message. The function does not return any value; its only purpose is to log a message as a side effect.
 
 ```javascript
-// The function uses a template literal for string formatting.
-console.log(`Hello, ${name}!`);
+// The function takes a 'name' and logs a greeting.
+function greet(name) {
+    // The template literal constructs the final string.
+    console.log(`Hello, ${name}!`);
+}
 ```
 
 ## Usage Notes
 
-- This function does not return a value. Its output is sent directly to the console and cannot be assigned to a variable.
-- If a non-string value (like a number or an object) is passed as the `name`, JavaScript will attempt to convert it to its string representation, which may result in unexpected output.
-- The function's primary effect is logging to the console, making it useful for debugging or displaying information to the user in a development environment.
+- The output of this function is directed to the standard console, such as a browser's developer console or a Node.js terminal. It does not render content on a webpage.
+- While a string is the expected type for the `name` parameter, JavaScript's type coercion will attempt to convert other data types (like numbers or objects) into a string representation when they are passed.
 
 ## Example
 
 ```javascript
 // Example usage
-greet("Alice");
 greet("World");
+greet("Alice");
 ```
 
 **Output:**
 
 ```
-Hello, Alice!
 Hello, World!
+Hello, Alice!
 ```
 
 ***
