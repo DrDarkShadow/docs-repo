@@ -3,7 +3,7 @@
 
 ### Sheet: Dataset Overview
 
-This sheet appears to be an inventory of healthcare data assets. It categorizes datasets by type, such as MRI Scans, CT Scans, X-ray Images, and EHR Data. For each category, it provides key metrics: the total `Number of Records` and the overall `Size (GB)`.
+This sheet appears to be an inventory of medical datasets. It categorizes data by type, such as MRI Scans, CT Scans, X-ray Images, and Electronic Health Record (EHR) Data. For each dataset type, it provides quantitative metrics, including the total number of records and the overall data size in gigabytes (GB).
 
 
 
@@ -12,7 +12,7 @@ This sheet appears to be an inventory of healthcare data assets. It categorizes 
 
 ### Sheet: Model Performance
 
-This dataset contains a performance comparison of different machine learning models, such as ResNet50 and ViT-Base. It evaluates each model based on key classification metrics: Accuracy, Precision, and Recall, with all values presented as percentages.
+This dataset appears to be a performance comparison of various machine learning models. Each row represents a specific model, identified by its name. The columns quantify each model's performance using standard classification metrics: Accuracy, Precision, and Recall, with all values expressed as percentages.
 
 
 
@@ -21,7 +21,7 @@ This dataset contains a performance comparison of different machine learning mod
 
 ### Sheet: System Metrics
 
-This data appears to be a performance benchmark summary for a computational task, likely related to machine learning or image processing. It details key performance indicators, including an average inference time of 0.34 seconds per image, a peak throughput of 220 images per minute, and an 86% GPU utilization rate. The data also specifies the server hardware configuration used for the benchmark, which consists of 4 NVIDIA A100 GPUs, 256 GB of RAM, and a 48-core CPU.
+This data appears to be a summary of a performance benchmark for a machine learning system, likely focused on image processing. It contains key performance metrics, including an average inference time of 0.34 seconds per image and a peak throughput of 220 images per minute. The data also records resource usage, showing 86% GPU utilization, and specifies the server hardware used for the test (4x NVIDIA A100 GPUs, 256 GB RAM, 48-Core CPU).
 
 
 
@@ -30,6 +30,6 @@ This data appears to be a performance benchmark summary for a computational task
 
 ### Sheet: Deployment Stats
 
-This data appears to be a high-level summary or dashboard of key performance indicators (KPIs) for a software system or service, likely operating in the healthcare sector. It outlines the system's operational scale, with deployment in 12 hospitals across 3 countries. The data also quantifies daily usage and engagement, showing 142 active users and 4,500 API requests. A key technical performance metric is included, indicating a system uptime of 99.97%.
+This data appears to be a high-level summary or dashboard of Key Performance Indicators (KPIs) for a software system or service, likely operating in the healthcare sector. The metrics cover deployment scale (12 hospitals across 3 countries), user engagement (142 daily active users), system load (4,500 API requests per day), and operational reliability (99.97% uptime).
 
 
