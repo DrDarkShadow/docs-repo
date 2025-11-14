@@ -124,3 +124,60 @@ Is 9 an Armstrong number? True
 ```
 
 ***
+## FunctionDef is_palindrome(s)
+# Function: is_palindrome(s)
+
+## Overview
+
+The `is_palindrome` function checks if a given string is a palindrome, ignoring case and spaces.
+
+## parameters
+
+- `s` (str): The input string to be checked for palindrome properties.
+
+## Description
+
+This function determines if a string reads the same forwards as it does backwards. The process involves two main steps: normalization and comparison.
+
+First, the function normalizes the input string `s` to ensure a fair comparison. It converts all characters to lowercase using `s.lower()` to make the check case-insensitive. Immediately after, it removes all space characters from the string by calling `.replace(" ", "")`. This cleaned-up version of the string is then reassigned to the variable `s`.
+
+```python
+s = s.lower().replace(" ", "")
+```
+
+Second, the function compares the normalized string `s` with its reverse. The reverse of the string is obtained using Python's slice notation `s[::-1]`. If the normalized string is identical to its reversed version, the expression `s == s[::-1]` evaluates to `True`, indicating it is a palindrome. Otherwise, it evaluates to `False`. The function returns this boolean result.
+
+## Usage Notes
+
+- The function is case-insensitive. For example, `is_palindrome('Racecar')` will return `True`.
+- All space characters are ignored. For example, `is_palindrome('taco cat')` will return `True`.
+- The function does not remove punctuation or other non-alphanumeric characters. A string like `'A man, a plan, a canal: Panama'` will return `False` because the punctuation is included in the comparison.
+
+**Output Example**: The function returns a boolean value.
+`True`
+
+## Example
+
+```python
+# Example 1: A palindrome with mixed case and spaces
+result1 = is_palindrome("A man a plan a canal Panama")
+print(f"'A man a plan a canal Panama' is a palindrome: {result1}")
+
+# Example 2: A simple non-palindrome
+result2 = is_palindrome("hello world")
+print(f"'hello world' is a palindrome: {result2}")
+
+# Example 3: A palindrome with mixed case
+result3 = is_palindrome("TacoCat")
+print(f"'TacoCat' is a palindrome: {result3}")
+```
+
+**Output:**
+
+```
+'A man a plan a canal Panama' is a palindrome: True
+'hello world' is a palindrome: False
+'TacoCat' is a palindrome: True
+```
+
+***
