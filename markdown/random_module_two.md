@@ -181,3 +181,73 @@ print(f"'TacoCat' is a palindrome: {result3}")
 ```
 
 ***
+## FunctionDef binary_search(arr, target)
+# Function: binary_search(arr, target)
+
+## Overview
+
+The `binary_search` function efficiently finds the index of a target value within a sorted list by repeatedly dividing the search interval in half.
+
+## parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `list` | The sorted list of elements to search through. The elements can be of any comparable type (e.g., integers, strings). |
+| `target` | `any` | The value to search for within the `arr`. This should be the same type as the elements in the list. |
+
+## Description
+
+This function implements the classic binary search algorithm. It operates on the principle of "divide and conquer" to find a target value in a sorted array.
+
+The search begins by initializing two pointers, `left` and `right`, to the start and end of the array, respectively. A `while` loop continues as long as the `left` pointer is less than or equal to the `right` pointer, indicating there is still a valid search space.
+
+Inside the loop, a `mid` index is calculated as the floor of the average of `left` and `right`. The element at `arr[mid]` is then compared to the `target`:
+- If `arr[mid]` is equal to the `target`, the search is successful, and the function returns the `mid` index.
+- If `arr[mid]` is less than the `target`, it means the target must lie in the right half of the current search space. The `left` pointer is then updated to `mid + 1` to discard the left half.
+- If `arr[mid]` is greater than the `target`, the target must be in the left half. The `right` pointer is updated to `mid - 1` to discard the right half.
+
+If the `while` loop completes without finding the target (i.e., `left` becomes greater than `right`), it means the target is not in the array. In this case, the function returns `-1`.
+
+```python
+# Example of internal logic
+left, right = 0, 9  # For an array of size 10
+target = 23
+# Loop 1: mid = 4, arr[4] = 16. 16 < 23, so left becomes 5.
+# Loop 2: mid = 7, arr[7] = 56. 56 > 23, so right becomes 6.
+# Loop 3: mid = 5, arr[5] = 23. 23 == 23, return 5.
+```
+
+## Usage Notes
+
+- The input list `arr` **must** be sorted in ascending order for the algorithm to function correctly. Searching an unsorted list will produce incorrect and unpredictable results.
+- The function returns the zero-based index of the first occurrence of the `target` if found. Note that if there are duplicate values, which specific index is returned is not guaranteed, only that it will be one of the valid indices.
+- If the `target` is not present in the list, the function returns `-1`.
+- The time complexity of this algorithm is O(log n), making it extremely efficient for searching large datasets compared to a linear search (O(n)).
+
+**Output Example**: The function returns an integer representing the index or `-1`.
+
+## Example
+
+```python
+# Example usage
+sorted_numbers = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+
+# Case 1: Target is found
+target_value = 23
+result_found = binary_search(sorted_numbers, target_value)
+print(f"Searching for {target_value}: Index = {result_found}")
+
+# Case 2: Target is not found
+target_value_absent = 15
+result_not_found = binary_search(sorted_numbers, target_value_absent)
+print(f"Searching for {target_value_absent}: Index = {result_not_found}")
+```
+
+**Output:**
+
+```
+Searching for 23: Index = 5
+Searching for 15: Index = -1
+```
+
+***
